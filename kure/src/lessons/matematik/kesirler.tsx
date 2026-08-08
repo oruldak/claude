@@ -38,7 +38,7 @@ function Dilim({
       {/* cylinderGeometry: (üst r, alt r, yükseklik, dilim, yükseklik dilimi, açık, başlangıç, uzunluk) */}
       <cylinderGeometry args={[r, r, yukseklik, 48, 1, false, bas, uzunluk * 0.985]} />
       <meshStandardMaterial
-        color={dolu ? renk : '#1a2542'}
+        color={dolu ? renk : '#cfc6b6'}
         transparent
         opacity={dolu ? 0.92 : 0.35}
         roughness={0.5}
@@ -101,7 +101,7 @@ function Serit({
         <mesh key={i} position={[merkez[0] - genislik / 2 + w * (i + 0.5), merkez[1], merkez[2]]}>
           <boxGeometry args={[w * 0.95, 0.42, 0.28]} />
           <meshStandardMaterial
-            color={i < pay ? renk : '#1a2542'}
+            color={i < pay ? renk : '#cfc6b6'}
             transparent
             opacity={i < pay ? 0.95 : 0.4}
             roughness={0.5}
@@ -137,8 +137,8 @@ function KesirlerSahne({ adim }: SahneProps) {
       gosterge={
         <Gosterge
           satirlar={[
-            { ad: '1. kesir', deger: `${p1}/${q1}`, renk: '#38e1c6' },
-            { ad: '2. kesir', deger: `${p2}/${q2}`, renk: '#ffb454' },
+            { ad: '1. kesir', deger: `${p1}/${q1}`, renk: '#0f766e' },
+            { ad: '2. kesir', deger: `${p2}/${q2}`, renk: '#b45309' },
             { ad: 'ondalık', deger: `${(p1 / q1).toFixed(3)}  |  ${(p2 / q2).toFixed(3)}` },
             ...(adim >= 3
               ? [
@@ -146,12 +146,12 @@ function KesirlerSahne({ adim }: SahneProps) {
                     ad: 'karşılaştırma',
                     deger:
                       p1 / q1 > p2 / q2 ? `${p1}/${q1} > ${p2}/${q2}` : p1 / q1 < p2 / q2 ? `${p1}/${q1} < ${p2}/${q2}` : 'eşit',
-                    renk: '#f472b6',
+                    renk: '#be185d',
                   },
                 ]
               : []),
             ...(adim >= 4
-              ? [{ ad: 'toplam', deger: `${toplamPay}/${ortak}`, renk: '#8b7dff' }]
+              ? [{ ad: 'toplam', deger: `${toplamPay}/${ortak}`, renk: '#4338ca' }]
               : []),
           ]}
         />
@@ -171,7 +171,7 @@ function KesirlerSahne({ adim }: SahneProps) {
               setP1((p) => Math.min(p, v))
             }}
           />
-          <Kaydirac etiket="2. pay" deger={p2} min={0} max={q2} adim={1} basamak={0} onChange={setP2} renk="#ffb454" />
+          <Kaydirac etiket="2. pay" deger={p2} min={0} max={q2} adim={1} basamak={0} onChange={setP2} renk="#b45309" />
           <Kaydirac
             etiket="2. payda"
             deger={q2}
@@ -179,7 +179,7 @@ function KesirlerSahne({ adim }: SahneProps) {
             max={10}
             adim={1}
             basamak={0}
-            renk="#ffb454"
+            renk="#b45309"
             onChange={(v) => {
               setQ2(v)
               setP2((p) => Math.min(p, v))
@@ -199,29 +199,29 @@ function KesirlerSahne({ adim }: SahneProps) {
         </>
       }
       sahne={
-        <Sahne kamera={[0, 2.2, 9.5]} izgara={false} maxUzaklik={26}>
-          <Pasta merkez={[-2.4, 0.6, 0]} pay={p1Et} payda={q1Et} renk="#38e1c6" ayrik={adim === 1 ? 0.16 : 0} />
-          <Etiket konum={[-2.4, -1.35, 0]} renk="#38e1c6">
+        <Sahne kamera={[0, 2.2, 9.5]} zemin="yok" maxUzaklik={26}>
+          <Pasta merkez={[-2.4, 0.6, 0]} pay={p1Et} payda={q1Et} renk="#0f766e" ayrik={adim === 1 ? 0.16 : 0} />
+          <Etiket konum={[-2.4, -1.35, 0]} renk="#0f766e">
             {p1Et} / {q1Et}
           </Etiket>
 
-          <Pasta merkez={[2.4, 0.6, 0]} pay={p2Et} payda={q2Et} renk="#ffb454" ayrik={adim === 1 ? 0.16 : 0} />
-          <Etiket konum={[2.4, -1.35, 0]} renk="#ffb454">
+          <Pasta merkez={[2.4, 0.6, 0]} pay={p2Et} payda={q2Et} renk="#b45309" ayrik={adim === 1 ? 0.16 : 0} />
+          <Etiket konum={[2.4, -1.35, 0]} renk="#b45309">
             {p2Et} / {q2Et}
           </Etiket>
 
           {adim === 0 && (
-            <Etiket konum={[0, 2.6, 0]} renk="#94a3b8" kucuk>
+            <Etiket konum={[0, 2.6, 0]} renk="#6b7280" kucuk>
               payda = bütün kaç EŞ parçaya bölündü
             </Etiket>
           )}
           {adim === 1 && (
-            <Etiket konum={[0, 2.6, 0]} renk="#94a3b8" kucuk>
+            <Etiket konum={[0, 2.6, 0]} renk="#6b7280" kucuk>
               pay = bu parçalardan kaç tanesini aldık
             </Etiket>
           )}
           {adim === 2 && (
-            <Etiket konum={[0, 2.6, 0]} renk="#8b7dff" kucuk>
+            <Etiket konum={[0, 2.6, 0]} renk="#4338ca" kucuk>
               her dilimi ikiye bölmek kesrin DEĞERİNİ değiştirmez
             </Etiket>
           )}
@@ -229,23 +229,23 @@ function KesirlerSahne({ adim }: SahneProps) {
           {/* Şerit modeli — karşılaştırma ve toplama */}
           {adim >= 3 && (
             <>
-              <Serit merkez={[0, -2.3, 0]} pay={p1} payda={q1} renk="#38e1c6" />
-              <Serit merkez={[0, -3.05, 0]} pay={p2} payda={q2} renk="#ffb454" />
-              <Etiket konum={[-2.35, -2.3, 0]} renk="#38e1c6" kucuk>
+              <Serit merkez={[0, -2.3, 0]} pay={p1} payda={q1} renk="#0f766e" />
+              <Serit merkez={[0, -3.05, 0]} pay={p2} payda={q2} renk="#b45309" />
+              <Etiket konum={[-2.35, -2.3, 0]} renk="#0f766e" kucuk>
                 {p1}/{q1}
               </Etiket>
-              <Etiket konum={[-2.35, -3.05, 0]} renk="#ffb454" kucuk>
+              <Etiket konum={[-2.35, -3.05, 0]} renk="#b45309" kucuk>
                 {p2}/{q2}
               </Etiket>
             </>
           )}
           {adim >= 4 && (
             <>
-              <Serit merkez={[0, -3.9, 0]} pay={Math.min(toplamPay, ortak)} payda={ortak} renk="#8b7dff" />
-              <Etiket konum={[-2.35, -3.9, 0]} renk="#8b7dff" kucuk>
+              <Serit merkez={[0, -3.9, 0]} pay={Math.min(toplamPay, ortak)} payda={ortak} renk="#4338ca" />
+              <Etiket konum={[-2.35, -3.9, 0]} renk="#4338ca" kucuk>
                 {toplamPay}/{ortak}
               </Etiket>
-              <Etiket konum={[0, -4.6, 0]} renk="#8b7dff">
+              <Etiket konum={[0, -4.6, 0]} renk="#4338ca">
                 {p1}/{q1} + {p2}/{q2} = {toplamPay}/{ortak}
                 {toplamPay > ortak ? ` (= 1 tam ${toplamPay - ortak}/${ortak})` : ''}
               </Etiket>

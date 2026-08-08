@@ -76,10 +76,10 @@ function EgikAtisSahne({ adim }: SahneProps) {
           satirlar={[
             { ad: 'v₀', deger: `${v0.toFixed(1)} m/s` },
             { ad: 'açı', deger: `${aci.toFixed(0)}°` },
-            { ad: 'g', deger: `${g} m/s²`, renk: '#8b7dff' },
-            { ad: 'uçuş süresi', deger: `${ucus.toFixed(2)} s`, renk: '#ffb454' },
-            { ad: 'menzil', deger: `${menzil.toFixed(1)} m`, renk: '#38e1c6' },
-            { ad: 'max yükseklik', deger: `${maxY.toFixed(1)} m`, renk: '#f472b6' },
+            { ad: 'g', deger: `${g} m/s²`, renk: '#4338ca' },
+            { ad: 'uçuş süresi', deger: `${ucus.toFixed(2)} s`, renk: '#b45309' },
+            { ad: 'menzil', deger: `${menzil.toFixed(1)} m`, renk: '#0f766e' },
+            { ad: 'max yükseklik', deger: `${maxY.toFixed(1)} m`, renk: '#be185d' },
             { ad: 'anlık hız', deger: `${hiz.toFixed(1)} m/s` },
           ]}
         />
@@ -87,11 +87,11 @@ function EgikAtisSahne({ adim }: SahneProps) {
       kontrol={
         <>
           <Kaydirac etiket="v₀ (m/s)" deger={v0} min={5} max={30} onChange={setV0} basamak={0} />
-          <Kaydirac etiket="atış açısı" deger={aci} min={5} max={85} adim={1} basamak={0} onChange={setAci} birim="°" renk="#ffb454" />
-          <Kaydirac etiket="yön (azimut)" deger={azimut} min={-80} max={80} adim={1} basamak={0} onChange={setAzimut} birim="°" renk="#8b7dff" />
+          <Kaydirac etiket="atış açısı" deger={aci} min={5} max={85} adim={1} basamak={0} onChange={setAci} birim="°" renk="#b45309" />
+          <Kaydirac etiket="yön (azimut)" deger={azimut} min={-80} max={80} adim={1} basamak={0} onChange={setAzimut} birim="°" renk="#4338ca" />
           <div className="flex gap-1.5">
             {GEZEGENLER.map((p, i) => (
-              <Dugme key={p.ad} onClick={() => setGi(i)} aktif={i === gi} boyut="sm" renk="#8b7dff">
+              <Dugme key={p.ad} onClick={() => setGi(i)} aktif={i === gi} boyut="sm" renk="#4338ca">
                 {p.ad}
               </Dugme>
             ))}
@@ -103,18 +103,47 @@ function EgikAtisSahne({ adim }: SahneProps) {
         </>
       }
       sahne={
-        <Sahne kamera={[6, 4.5, 11]} izgara maxUzaklik={45}>
-          {/* Atış rampası */}
-          <mesh position={[0, 0.12, 0]}>
-            <cylinderGeometry args={[0.28, 0.36, 0.24, 20]} />
-            <meshStandardMaterial color="#334867" />
-          </mesh>
+        <Sahne kamera={[7.5, 3.2, 11.5]} zemin="cim" maxUzaklik={45}>
+          {/* Fırlatıcı: taban + atış açısına göre yönelen namlu */}
+          <group rotation={[0, -az, 0]}>
+            <mesh position={[0, 0.16, 0]} castShadow receiveShadow>
+              <boxGeometry args={[0.9, 0.32, 0.7]} />
+              <meshStandardMaterial color="#4b5563" roughness={0.55} metalness={0.4} />
+            </mesh>
+            <group position={[0, 0.34, 0]} rotation={[0, 0, th]}>
+              <mesh position={[0.55, 0, 0]} rotation={[0, 0, Math.PI / 2]} castShadow>
+                <cylinderGeometry args={[0.15, 0.17, 1.1, 20]} />
+                <meshStandardMaterial color="#5b6472" roughness={0.35} metalness={0.75} />
+              </mesh>
+            </group>
+          </group>
+
+          {/* Menzil şeridi: her 5 metrede bir işaret */}
+          {Array.from({ length: 8 }, (_, i) => {
+            const m = (i + 1) * 5
+            const x = m * OLCEK * Math.cos(az)
+            const z = m * OLCEK * Math.sin(az)
+            return (
+              <group key={m}>
+                <mesh position={[x, 0.22, z]} castShadow>
+                  <boxGeometry args={[0.05, 0.44, 0.05]} />
+                  <meshStandardMaterial color="#f8fafc" roughness={0.7} />
+                </mesh>
+                <Etiket konum={[x, 0.62, z]} renk="#4a5260" kucuk>
+                  {m} m
+                </Etiket>
+              </group>
+            )
+          })}
 
           {/* Yörünge */}
-          <UzayEgrisi f={konum} t0={0} t1={ucus} renk="#38e1c6" kalinlik={3} />
+          <UzayEgrisi f={konum} t0={0} t1={ucus} renk="#0f766e" kalinlik={3} />
 
-          {/* Hareketli cisim */}
-          <Nokta konum={P} renk="#ffb454" r={0.16} />
+          {/* Hareketli cisim: gerçek bir top gibi gölge düşürür */}
+          <mesh position={P} castShadow>
+            <sphereGeometry args={[0.19, 32, 24]} />
+            <meshStandardMaterial color="#d9541f" roughness={0.55} metalness={0.1} />
+          </mesh>
 
           {/* Hız vektörü ve bileşenleri */}
           {adim >= 1 && (
@@ -122,30 +151,30 @@ function EgikAtisSahne({ adim }: SahneProps) {
               <Ok
                 baslangic={P}
                 bitis={[P[0] + vx * OLCEK * 0.35, P[1] + anlikVy * OLCEK * 0.35, P[2] + vz * OLCEK * 0.35]}
-                renk="#f472b6"
+                renk="#be185d"
                 kalinlik={0.04}
               />
               <Ok
                 baslangic={P}
                 bitis={[P[0] + vx * OLCEK * 0.35, P[1], P[2] + vz * OLCEK * 0.35]}
-                renk="#38e1c6"
+                renk="#0f766e"
                 kalinlik={0.032}
                 baslikBoyu={0.2}
               />
               <Ok
                 baslangic={P}
                 bitis={[P[0], P[1] + anlikVy * OLCEK * 0.35, P[2]]}
-                renk="#8b7dff"
+                renk="#4338ca"
                 kalinlik={0.032}
                 baslikBoyu={0.2}
               />
-              <Etiket konum={[P[0] + 0.4, P[1] + 0.7, P[2]]} renk="#f472b6" kucuk>
+              <Etiket konum={[P[0] + 0.4, P[1] + 0.7, P[2]]} renk="#be185d" kucuk>
                 v = {hiz.toFixed(1)} m/s
               </Etiket>
-              <Etiket konum={[P[0] + vx * OLCEK * 0.4, P[1] - 0.35, P[2]]} renk="#38e1c6" kucuk>
+              <Etiket konum={[P[0] + vx * OLCEK * 0.4, P[1] - 0.35, P[2]]} renk="#0f766e" kucuk>
                 vₓ sabit
               </Etiket>
-              <Etiket konum={[P[0] - 0.55, P[1] + anlikVy * OLCEK * 0.4, P[2]]} renk="#8b7dff" kucuk>
+              <Etiket konum={[P[0] - 0.55, P[1] + anlikVy * OLCEK * 0.4, P[2]]} renk="#4338ca" kucuk>
                 v_y değişiyor
               </Etiket>
             </>
@@ -156,7 +185,7 @@ function EgikAtisSahne({ adim }: SahneProps) {
             <>
               <Nokta
                 konum={[-1.2, Math.max(vy * tk - 0.5 * g * tk * tk, 0) * OLCEK, 0]}
-                renk="#94a3b8"
+                renk="#6b7280"
                 r={0.14}
               />
               <Line
@@ -164,13 +193,13 @@ function EgikAtisSahne({ adim }: SahneProps) {
                   [-1.2, P[1], 0],
                   [P[0], P[1], P[2]],
                 ]}
-                color="#64748b"
+                color="#8a8f9c"
                 lineWidth={1.2}
                 dashed
                 dashSize={0.16}
                 gapSize={0.12}
               />
-              <Etiket konum={[-1.2, -0.4, 0]} renk="#94a3b8" kucuk>
+              <Etiket konum={[-1.2, -0.4, 0]} renk="#6b7280" kucuk>
                 aynı düşey hareket
               </Etiket>
             </>
@@ -184,18 +213,18 @@ function EgikAtisSahne({ adim }: SahneProps) {
                   [0, 0.02, 0],
                   [menzil * Math.cos(az) * OLCEK, 0.02, menzil * Math.sin(az) * OLCEK],
                 ]}
-                color="#38e1c6"
+                color="#0f766e"
                 lineWidth={2.4}
               />
               <Etiket
                 konum={[(menzil * Math.cos(az) * OLCEK) / 2, -0.4, (menzil * Math.sin(az) * OLCEK) / 2]}
-                renk="#38e1c6"
+                renk="#0f766e"
                 kucuk
               >
                 menzil = {menzil.toFixed(1)} m
               </Etiket>
-              <Nokta konum={konum(ucus / 2)} renk="#f472b6" r={0.12} />
-              <Etiket konum={[konum(ucus / 2)[0], maxY * OLCEK + 0.45, konum(ucus / 2)[2]]} renk="#f472b6" kucuk>
+              <Nokta konum={konum(ucus / 2)} renk="#be185d" r={0.12} />
+              <Etiket konum={[konum(ucus / 2)[0], maxY * OLCEK + 0.45, konum(ucus / 2)[2]]} renk="#be185d" kucuk>
                 h_max = {maxY.toFixed(1)} m
               </Etiket>
             </>
@@ -209,12 +238,12 @@ function EgikAtisSahne({ adim }: SahneProps) {
                   f={y.f}
                   t0={0}
                   t1={y.T}
-                  renk={y.d === 45 ? '#ffb454' : '#42536f'}
+                  renk={y.d === 45 ? '#b45309' : '#b8b0a2'}
                   kalinlik={y.d === 45 ? 3 : 1.8}
                 />
                 <Etiket
                   konum={[y.f(y.T)[0], 0.25, y.f(y.T)[2]]}
-                  renk={y.d === 45 ? '#ffb454' : '#64748b'}
+                  renk={y.d === 45 ? '#b45309' : '#8a8f9c'}
                   kucuk
                 >
                   {y.d}°

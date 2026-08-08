@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Cizgi as Line, Egri, Eksenler, Etiket, Nokta, Sahne, type V3 } from '../shared/sahne'
+import { Cizgi as Line, Egri, Eksenler, Etiket, KareliKagit, Nokta, Sahne, type V3 } from '../shared/sahne'
 import { Dugme, Duzen, Gosterge, Kaydirac, Anahtar } from '../shared/ui'
 import { dongusel, useGecis, useZaman } from '../shared/animasyon'
 import type { DersModulu, SahneProps } from '../types'
@@ -86,9 +86,9 @@ function TurevSahne({ adim }: SahneProps) {
             {
               ad: 'Δy/Δx',
               deger: Number.isFinite(egim) ? egim.toFixed(3) : '—',
-              renk: '#ffb454',
+              renk: '#b45309',
             },
-            { ad: "f′(a)", deger: gercekEgim.toFixed(3), renk: '#38e1c6' },
+            { ad: "f′(a)", deger: gercekEgim.toFixed(3), renk: '#0f766e' },
           ]}
         />
       }
@@ -107,7 +107,7 @@ function TurevSahne({ adim }: SahneProps) {
             min={-3.8}
             max={3.8}
             onChange={setA}
-            renk="#38e1c6"
+            renk="#0f766e"
           />
           <Kaydirac
             etiket="h (artış)"
@@ -115,7 +115,7 @@ function TurevSahne({ adim }: SahneProps) {
             min={0.05}
             max={2.5}
             onChange={setH}
-            renk="#ffb454"
+            renk="#b45309"
           />
           <Anahtar etiket="türev eğrisi" deger={turevGoster} onChange={setTurevGoster} />
           <Dugme onClick={() => setOynat(!oynat)} aktif={oynat} boyut="sm">
@@ -124,17 +124,18 @@ function TurevSahne({ adim }: SahneProps) {
         </>
       }
       sahne={
-        <Sahne kamera={[5.4, 2.6, 9.6]} izgara={false} maxUzaklik={30}>
+        <Sahne kamera={[5.4, 2.6, 9.6]} zemin="yok" maxUzaklik={30}>
+          <KareliKagit genislik={10} yukseklik={10} />
           <Eksenler boy={4.4} eksiBoy={4.4} bolme={1} />
 
           {/* f(x) eğrisi */}
-          <Egri f={fn.f} x0={X0} x1={X1} renk="#7dd3fc" kalinlik={3.4} sinirY={5.5} />
+          <Egri f={fn.f} x0={X0} x1={X1} renk="#0369a1" kalinlik={3.4} sinirY={5.5} />
 
           {/* Kesen doğru (sekant) → h→0 iken teğet */}
           {adim >= 1 && (
             <Line
               points={dogru}
-              color={hEt < 0.05 ? '#38e1c6' : '#ffb454'}
+              color={hEt < 0.05 ? '#0f766e' : '#b45309'}
               lineWidth={2.6}
             />
           )}
@@ -144,7 +145,7 @@ function TurevSahne({ adim }: SahneProps) {
             <>
               <Line
                 points={[A, [B[0], A[1], 0]] as V3[]}
-                color="#ffb454"
+                color="#b45309"
                 lineWidth={2}
                 dashed
                 dashSize={0.14}
@@ -152,29 +153,29 @@ function TurevSahne({ adim }: SahneProps) {
               />
               <Line
                 points={[[B[0], A[1], 0], B] as V3[]}
-                color="#ffb454"
+                color="#b45309"
                 lineWidth={2}
                 dashed
                 dashSize={0.14}
                 gapSize={0.1}
               />
-              <Etiket konum={[(A[0] + B[0]) / 2, A[1] - 0.34, 0]} renk="#ffb454" kucuk>
+              <Etiket konum={[(A[0] + B[0]) / 2, A[1] - 0.34, 0]} renk="#b45309" kucuk>
                 Δx = h
               </Etiket>
-              <Etiket konum={[B[0] + 0.42, (A[1] + B[1]) / 2, 0]} renk="#ffb454" kucuk>
+              <Etiket konum={[B[0] + 0.42, (A[1] + B[1]) / 2, 0]} renk="#b45309" kucuk>
                 Δy
               </Etiket>
             </>
           )}
 
-          <Nokta konum={A} renk="#38e1c6" r={0.12} />
-          <Etiket konum={[A[0], A[1] + 0.5, 0]} renk="#38e1c6" kucuk>
+          <Nokta konum={A} renk="#0f766e" r={0.12} />
+          <Etiket konum={[A[0], A[1] + 0.5, 0]} renk="#0f766e" kucuk>
             A(a, f(a))
           </Etiket>
           {adim >= 1 && hEt > 0.06 && (
             <>
-              <Nokta konum={B} renk="#ffb454" r={0.1} />
-              <Etiket konum={[B[0], B[1] + 0.48, 0]} renk="#ffb454" kucuk>
+              <Nokta konum={B} renk="#b45309" r={0.1} />
+              <Etiket konum={[B[0], B[1] + 0.48, 0]} renk="#b45309" kucuk>
                 B(a+h, f(a+h))
               </Etiket>
             </>
@@ -183,17 +184,18 @@ function TurevSahne({ adim }: SahneProps) {
           {/* Türev fonksiyonu — ayrı bir düzlemde çizilir */}
           {(adim >= 3 || turevGoster) && (
             <group position={[0, 0, TUREV_Z]}>
+              <KareliKagit genislik={10} yukseklik={10} />
               <Eksenler boy={4.4} eksiBoy={4.4} bolme={0} adlar={['', "f'(x)", '']} />
               <Egri
                 f={fn.tf}
                 x0={X0}
                 x1={izSonu}
-                renk="#8b7dff"
+                renk="#4338ca"
                 kalinlik={3.2}
                 sinirY={5.5}
               />
-              <Nokta konum={[aEt, gercekEgim, 0]} renk="#8b7dff" r={0.11} />
-              <Etiket konum={[-3.4, 3.6, 0]} renk="#8b7dff" kucuk>
+              <Nokta konum={[aEt, gercekEgim, 0]} renk="#4338ca" r={0.11} />
+              <Etiket konum={[-3.4, 3.6, 0]} renk="#4338ca" kucuk>
                 türev fonksiyonu
               </Etiket>
             </group>
@@ -206,7 +208,7 @@ function TurevSahne({ adim }: SahneProps) {
                 [aEt, fn.f(aEt), 0],
                 [aEt, gercekEgim, TUREV_Z],
               ]}
-              color="#8b7dff"
+              color="#4338ca"
               lineWidth={1.4}
               dashed
               dashSize={0.16}
@@ -218,19 +220,19 @@ function TurevSahne({ adim }: SahneProps) {
           {adim >= 4 &&
             fn.kritik.map((k) => (
               <group key={k}>
-                <Nokta konum={[k, fn.f(k), 0]} renk="#f472b6" r={0.13} />
+                <Nokta konum={[k, fn.f(k), 0]} renk="#be185d" r={0.13} />
                 <Line
                   points={[
                     [k, fn.f(k), 0],
                     [k, 0, TUREV_Z],
                   ]}
-                  color="#f472b6"
+                  color="#be185d"
                   lineWidth={1.2}
                   dashed
                   dashSize={0.14}
                   gapSize={0.1}
                 />
-                <Etiket konum={[k, fn.f(k) + 0.55, 0]} renk="#f472b6" kucuk>
+                <Etiket konum={[k, fn.f(k) + 0.55, 0]} renk="#be185d" kucuk>
                   f′ = 0
                 </Etiket>
               </group>

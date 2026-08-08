@@ -9,16 +9,16 @@ const VERI = `H|Hidrojen|2.20;He|Helyum|;Li|Lityum|0.98;Be|Berilyum|1.57;B|Bor|2
 type Kategori = 'alkali' | 'toprakAlkali' | 'gecis' | 'lantanit' | 'aktinit' | 'metal' | 'yariMetal' | 'ametal' | 'halojen' | 'soygaz'
 
 const KATEGORI_RENK: Record<Kategori, string> = {
-  alkali: '#ff7a45',
-  toprakAlkali: '#ffb454',
-  gecis: '#8b7dff',
+  alkali: '#e0602e',
+  toprakAlkali: '#b45309',
+  gecis: '#4338ca',
   lantanit: '#c084fc',
-  aktinit: '#f472b6',
+  aktinit: '#be185d',
   metal: '#60a5fa',
   yariMetal: '#2dd4bf',
-  ametal: '#4ade80',
+  ametal: '#15803d',
   halojen: '#facc15',
-  soygaz: '#7dd3fc',
+  soygaz: '#0369a1',
 }
 
 const KATEGORI_ADI: Record<Kategori, string> = {
@@ -104,7 +104,7 @@ const ELEMENTLER: Elmnt[] = VERI.split(';').map((satirMetni, i) => {
   }
 })
 
-const BLOK_RENK: Record<string, string> = { s: '#ff7a45', p: '#4ade80', d: '#8b7dff', f: '#f472b6' }
+const BLOK_RENK: Record<string, string> = { s: '#e0602e', p: '#15803d', d: '#4338ca', f: '#be185d' }
 
 type Mod = 'kategori' | 'blok' | 'elektronegatiflik' | 'metal'
 
@@ -127,12 +127,12 @@ function PeriyodikSahne({ adim }: SahneProps) {
         else if (M === 'metal')
           renk =
             e.kategori === 'ametal' || e.kategori === 'halojen' || e.kategori === 'soygaz'
-              ? '#4ade80'
+              ? '#15803d'
               : e.kategori === 'yariMetal'
                 ? '#2dd4bf'
                 : '#60a5fa'
         else if (M === 'elektronegatiflik')
-          renk = e.en ? `hsl(${(1 - (e.en - 0.7) / 3.3) * 210}, 85%, 58%)` : '#334867'
+          renk = e.en ? `hsl(${(1 - (e.en - 0.7) / 3.3) * 210}, 85%, 58%)` : '#c9c0b1'
         else renk = KATEGORI_RENK[e.kategori]
         return { e, x, z, h, renk }
       }),
@@ -149,7 +149,7 @@ function PeriyodikSahne({ adim }: SahneProps) {
             { ad: 'periyot / grup', deger: `${el.periyot}. periyot · ${el.grup}. grup` },
             { ad: 'blok', deger: `${el.blok} bloğu`, renk: BLOK_RENK[el.blok] },
             { ad: 'sınıf', deger: KATEGORI_ADI[el.kategori] },
-            { ad: 'elektronegatiflik', deger: el.en ? el.en.toFixed(2) : '—', renk: '#ffb454' },
+            { ad: 'elektronegatiflik', deger: el.en ? el.en.toFixed(2) : '—', renk: '#b45309' },
           ]}
         />
       }
@@ -174,7 +174,7 @@ function PeriyodikSahne({ adim }: SahneProps) {
         </>
       }
       sahne={
-        <Sahne kamera={[0, 7.5, 8.5]} izgara={false} maxUzaklik={30} minUzaklik={3}>
+        <Sahne kamera={[0, 7.5, 8.5]} zemin="yok" maxUzaklik={30} minUzaklik={3}>
           {kutucuklar.map(({ e, x, z, h, renk }) => (
             <group key={e.Z} position={[x, h / 2, z]}>
               <mesh
@@ -198,7 +198,7 @@ function PeriyodikSahne({ adim }: SahneProps) {
           {(() => {
             const k = kutucuklar[secili]
             return (
-              <Etiket konum={[k.x, k.h + 0.75, k.z]} renk="#e6ecf7">
+              <Etiket konum={[k.x, k.h + 0.75, k.z]} renk="#191d24">
                 {el.Z} · {el.sembol} — {el.ad}
               </Etiket>
             )
@@ -206,23 +206,23 @@ function PeriyodikSahne({ adim }: SahneProps) {
 
           {/* Grup ve periyot başlıkları */}
           {Array.from({ length: 18 }, (_, i) => (
-            <Etiket key={`g${i}`} konum={[(i + 1 - 9.5) * 0.62, 0.05, (0.4 - 5) * 0.62]} renk="#64748b" arka="transparent" kucuk>
+            <Etiket key={`g${i}`} konum={[(i + 1 - 9.5) * 0.62, 0.05, (0.4 - 5) * 0.62]} renk="#8a8f9c" arka="transparent" kucuk>
               {i + 1}
             </Etiket>
           ))}
           {[1, 2, 3, 4, 5, 6, 7].map((p) => (
-            <Etiket key={`p${p}`} konum={[(0.2 - 9.5) * 0.62, 0.05, (p - 5) * 0.62]} renk="#64748b" arka="transparent" kucuk>
+            <Etiket key={`p${p}`} konum={[(0.2 - 9.5) * 0.62, 0.05, (p - 5) * 0.62]} renk="#8a8f9c" arka="transparent" kucuk>
               {p}
             </Etiket>
           ))}
 
           {adim === 0 && (
-            <Etiket konum={[0, 1.6, -3.4]} renk="#94a3b8" kucuk>
+            <Etiket konum={[0, 1.6, -3.4]} renk="#6b7280" kucuk>
               satır = periyot (kabuk sayısı) · sütun = grup (değerlik elektronu)
             </Etiket>
           )}
           {adim >= 3 && (
-            <Etiket konum={[0, 3.2, -3.4]} renk="#ffb454" kucuk>
+            <Etiket konum={[0, 3.2, -3.4]} renk="#b45309" kucuk>
               elektronegatiflik sağa ve yukarı doğru artar — en yüksek: F
             </Etiket>
           )}

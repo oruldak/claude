@@ -60,12 +60,12 @@ function NoronSahne({ adim }: SahneProps) {
       gosterge={
         <Gosterge
           satirlar={[
-            { ad: 'dinlenim potansiyeli', deger: '−70 mV', renk: '#7dd3fc' },
-            { ad: 'eşik değeri', deger: '−55 mV', renk: '#ffb454' },
-            { ad: 'anlık potansiyel', deger: `${potansiyel} mV`, renk: potansiyel > 0 ? '#f472b6' : '#7dd3fc' },
-            { ad: 'iletim', deger: miyelin ? 'sıçrayarak (saltatorik)' : 'sürekli', renk: miyelin ? '#4ade80' : '#94a3b8' },
-            { ad: 'bağıl hız', deger: miyelin ? '≈ 100 m/s' : '≈ 1 m/s', renk: '#38e1c6' },
-            { ad: 'uyaran', deger: esikAsildi ? 'eşik aşıldı → impuls var' : 'eşik altı → impuls yok', renk: esikAsildi ? '#4ade80' : '#f472b6' },
+            { ad: 'dinlenim potansiyeli', deger: '−70 mV', renk: '#0369a1' },
+            { ad: 'eşik değeri', deger: '−55 mV', renk: '#b45309' },
+            { ad: 'anlık potansiyel', deger: `${potansiyel} mV`, renk: potansiyel > 0 ? '#be185d' : '#0369a1' },
+            { ad: 'iletim', deger: miyelin ? 'sıçrayarak (saltatorik)' : 'sürekli', renk: miyelin ? '#15803d' : '#6b7280' },
+            { ad: 'bağıl hız', deger: miyelin ? '≈ 100 m/s' : '≈ 1 m/s', renk: '#0f766e' },
+            { ad: 'uyaran', deger: esikAsildi ? 'eşik aşıldı → impuls var' : 'eşik altı → impuls yok', renk: esikAsildi ? '#15803d' : '#be185d' },
           ]}
         />
       }
@@ -78,22 +78,22 @@ function NoronSahne({ adim }: SahneProps) {
             max={2}
             onChange={setUyaranSiddeti}
             basamak={2}
-            renk={esikAsildi ? '#4ade80' : '#f472b6'}
+            renk={esikAsildi ? '#15803d' : '#be185d'}
           />
-          <Anahtar etiket="miyelin kılıf" deger={miyelin} onChange={setMiyelin} renk="#4ade80" />
+          <Anahtar etiket="miyelin kılıf" deger={miyelin} onChange={setMiyelin} renk="#15803d" />
           <Dugme onClick={() => setOynat(!oynat)} aktif={oynat} boyut="sm">
             {oynat ? '⏸ durdur' : '▶ oynat'}
           </Dugme>
         </>
       }
       sahne={
-        <Sahne kamera={[0, 2, 11]} izgara={false} maxUzaklik={30}>
+        <Sahne kamera={[0, 2, 11]} zemin="yok" maxUzaklik={30}>
           {/* Dendritler */}
           {dendritler.map((d, i) => (
-            <Line key={i} points={d} color="#8b7dff" lineWidth={2.4} />
+            <Line key={i} points={d} color="#4338ca" lineWidth={2.4} />
           ))}
           {adim >= 0 && (
-            <Etiket konum={[-6.6, 1.9, 0]} renk="#8b7dff" kucuk>
+            <Etiket konum={[-6.6, 1.9, 0]} renk="#4338ca" kucuk>
               dendritler — uyarıyı alır
             </Etiket>
           )}
@@ -101,22 +101,22 @@ function NoronSahne({ adim }: SahneProps) {
           {/* Soma (hücre gövdesi) */}
           <mesh position={SOMA}>
             <sphereGeometry args={[0.75, 32, 24]} />
-            <meshStandardMaterial color="#a78bfa" roughness={0.45} emissive="#a78bfa" emissiveIntensity={0.15} />
+            <meshStandardMaterial color="#7c3aed" roughness={0.45} />
           </mesh>
           <mesh position={[SOMA[0], SOMA[1], SOMA[2] + 0.1]}>
             <sphereGeometry args={[0.3, 20, 20]} />
-            <meshStandardMaterial color="#6d28d9" />
+            <meshStandardMaterial color="#5b21b6" />
           </mesh>
-          <Etiket konum={[SOMA[0], SOMA[1] - 1.1, 0]} renk="#a78bfa" kucuk>
+          <Etiket konum={[SOMA[0], SOMA[1] - 1.1, 0]} renk="#7c3aed" kucuk>
             gövde (soma) + çekirdek
           </Etiket>
 
           {/* Akson */}
           <mesh position={[(AKSON_BAS + AKSON_SON) / 2, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
             <cylinderGeometry args={[0.17, 0.17, AKSON_SON - AKSON_BAS, 20]} />
-            <meshStandardMaterial color="#475569" roughness={0.5} />
+            <meshStandardMaterial color="#7a8290" roughness={0.5} />
           </mesh>
-          <Etiket konum={[0, -0.95, 0]} renk="#94a3b8" kucuk>
+          <Etiket konum={[0, -0.95, 0]} renk="#6b7280" kucuk>
             akson — impulsu taşır
           </Etiket>
 
@@ -128,17 +128,17 @@ function NoronSahne({ adim }: SahneProps) {
               return (
                 <mesh key={i} position={[d + g / 2, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
                   <capsuleGeometry args={[0.34, g * 0.72, 6, 18]} />
-                  <meshStandardMaterial color="#e2e8f0" transparent opacity={0.6} roughness={0.35} />
+                  <meshStandardMaterial color="#f2ede3" transparent opacity={0.6} roughness={0.35} />
                 </mesh>
               )
             })}
           {adim >= 3 &&
             miyelin &&
             dugumler.map((d, i) => (
-              <Nokta key={i} konum={[d, 0, 0]} renk="#ffb454" r={0.1} />
+              <Nokta key={i} konum={[d, 0, 0]} renk="#b45309" r={0.1} />
             ))}
           {adim >= 3 && miyelin && (
-            <Etiket konum={[0, 1.15, 0]} renk="#e2e8f0" kucuk>
+            <Etiket konum={[0, 1.15, 0]} renk="#f2ede3" kucuk>
               miyelin kılıf · turuncu noktalar: Ranvier boğumları
             </Etiket>
           )}
@@ -148,9 +148,9 @@ function NoronSahne({ adim }: SahneProps) {
             <>
               <mesh position={[impulsX, 0, 0]}>
                 <sphereGeometry args={[0.42, 24, 24]} />
-                <meshStandardMaterial color="#f472b6" transparent opacity={0.55} emissive="#f472b6" emissiveIntensity={0.9} />
+                <meshStandardMaterial color="#be185d" transparent opacity={0.55} emissive="#be185d" emissiveIntensity={0.25} />
               </mesh>
-              <Etiket konum={[impulsX, 0.95, 0]} renk="#f472b6" kucuk>
+              <Etiket konum={[impulsX, 0.95, 0]} renk="#be185d" kucuk>
                 +35 mV (depolarizasyon)
               </Etiket>
               {/* Na⁺ içeri, K⁺ dışarı */}
@@ -158,15 +158,15 @@ function NoronSahne({ adim }: SahneProps) {
                 const s = ((t * 2 + i * 0.33) % 1)
                 return (
                   <group key={i}>
-                    <Nokta konum={[impulsX - 0.2 + i * 0.2, 0.9 - s * 0.85, 0.2]} renk="#ffb454" r={0.075} />
-                    <Nokta konum={[impulsX - 0.2 + i * 0.2, -0.05 - s * 0.85, -0.2]} renk="#7dd3fc" r={0.075} />
+                    <Nokta konum={[impulsX - 0.2 + i * 0.2, 0.9 - s * 0.85, 0.2]} renk="#b45309" r={0.075} />
+                    <Nokta konum={[impulsX - 0.2 + i * 0.2, -0.05 - s * 0.85, -0.2]} renk="#0369a1" r={0.075} />
                   </group>
                 )
               })}
-              <Etiket konum={[impulsX + 1.1, 0.6, 0]} renk="#ffb454" kucuk>
+              <Etiket konum={[impulsX + 1.1, 0.6, 0]} renk="#b45309" kucuk>
                 Na⁺ içeri
               </Etiket>
-              <Etiket konum={[impulsX + 1.1, -0.75, 0]} renk="#7dd3fc" kucuk>
+              <Etiket konum={[impulsX + 1.1, -0.75, 0]} renk="#0369a1" kucuk>
                 K⁺ dışarı
               </Etiket>
             </>
@@ -175,13 +175,13 @@ function NoronSahne({ adim }: SahneProps) {
           {/* Akson ucu ve sinaps */}
           <mesh position={[AKSON_SON + 0.35, 0, 0]}>
             <sphereGeometry args={[0.45, 24, 24]} />
-            <meshStandardMaterial color="#475569" roughness={0.5} />
+            <meshStandardMaterial color="#7a8290" roughness={0.5} />
           </mesh>
           <mesh position={[AKSON_SON + 1.7, 0, 0]}>
             <sphereGeometry args={[0.62, 24, 24]} />
-            <meshStandardMaterial color="#8b7dff" transparent opacity={0.6} roughness={0.5} />
+            <meshStandardMaterial color="#4338ca" transparent opacity={0.6} roughness={0.5} />
           </mesh>
-          <Etiket konum={[AKSON_SON + 1.75, -1.1, 0]} renk="#8b7dff" kucuk>
+          <Etiket konum={[AKSON_SON + 1.75, -1.1, 0]} renk="#4338ca" kucuk>
             sonraki nöronun dendriti
           </Etiket>
 
@@ -197,19 +197,19 @@ function NoronSahne({ adim }: SahneProps) {
                 <Nokta
                   key={i}
                   konum={[AKSON_SON + 0.75 + s * 0.75, y * (1 - s * 0.4), z * (1 - s * 0.4)]}
-                  renk="#4ade80"
+                  renk="#15803d"
                   r={0.075}
                 />
               )
             })}
           {adim >= 4 && (
-            <Etiket konum={[AKSON_SON + 1.1, 1.1, 0]} renk="#4ade80" kucuk>
+            <Etiket konum={[AKSON_SON + 1.1, 1.1, 0]} renk="#15803d" kucuk>
               nörotransmitter (sinaptik boşluk)
             </Etiket>
           )}
 
           {adim === 1 && (
-            <Etiket konum={[0, 2.2, 0]} renk="#7dd3fc" kucuk>
+            <Etiket konum={[0, 2.2, 0]} renk="#0369a1" kucuk>
               dinlenim hâlinde: dışarısı (+), içerisi (−) → −70 mV · Na⁺/K⁺ pompası ATP harcar
             </Etiket>
           )}

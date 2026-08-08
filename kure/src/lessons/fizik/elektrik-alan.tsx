@@ -92,7 +92,7 @@ function ElektrikSahne({ adim }: SahneProps) {
           }
           yol.push(p)
         }
-        if (yol.length > 3) sonuc.push({ p: yol, renk: isaret > 0 ? '#ffb454' : '#7dd3fc' })
+        if (yol.length > 3) sonuc.push({ p: yol, renk: isaret > 0 ? '#b45309' : '#0369a1' })
       }
     }
     return sonuc
@@ -114,13 +114,13 @@ function ElektrikSahne({ adim }: SahneProps) {
       gosterge={
         <Gosterge
           satirlar={[
-            { ad: 'q₁', deger: `${q1.toFixed(1)} μC`, renk: q1 >= 0 ? '#ffb454' : '#7dd3fc' },
-            ...(cokYuk ? [{ ad: 'q₂', deger: `${q2.toFixed(1)} μC`, renk: q2 >= 0 ? '#ffb454' : '#7dd3fc' }] : []),
+            { ad: 'q₁', deger: `${q1.toFixed(1)} μC`, renk: q1 >= 0 ? '#b45309' : '#0369a1' },
+            ...(cokYuk ? [{ ad: 'q₂', deger: `${q2.toFixed(1)} μC`, renk: q2 >= 0 ? '#b45309' : '#0369a1' }] : []),
             ...(adim >= 3
               ? [
-                  { ad: '|E| (bağıl)', deger: Emag.toFixed(3), renk: '#f472b6' },
-                  { ad: '|F| = |q₀·E|', deger: F.toFixed(3), renk: '#4ade80' },
-                  { ad: 'V (bağıl)', deger: V.toFixed(3), renk: '#8b7dff' },
+                  { ad: '|E| (bağıl)', deger: Emag.toFixed(3), renk: '#be185d' },
+                  { ad: '|F| = |q₀·E|', deger: F.toFixed(3), renk: '#15803d' },
+                  { ad: 'V (bağıl)', deger: V.toFixed(3), renk: '#4338ca' },
                 ]
               : []),
           ]}
@@ -128,15 +128,15 @@ function ElektrikSahne({ adim }: SahneProps) {
       }
       kontrol={
         <>
-          <Kaydirac etiket="q₁ (μC)" deger={q1} min={-3} max={3} onChange={setQ1} basamak={1} renk="#ffb454" />
+          <Kaydirac etiket="q₁ (μC)" deger={q1} min={-3} max={3} onChange={setQ1} basamak={1} renk="#b45309" />
           {cokYuk && (
             <>
-              <Kaydirac etiket="q₂ (μC)" deger={q2} min={-3} max={3} onChange={setQ2} basamak={1} renk="#7dd3fc" />
+              <Kaydirac etiket="q₂ (μC)" deger={q2} min={-3} max={3} onChange={setQ2} basamak={1} renk="#0369a1" />
               <Kaydirac etiket="uzaklık d" deger={d} min={1} max={5} onChange={setD} basamak={1} />
             </>
           )}
           {adim >= 3 && (
-            <Kaydirac etiket="test yükü q₀" deger={testYuk} min={-1} max={1} onChange={setTestYuk} basamak={2} renk="#4ade80" />
+            <Kaydirac etiket="test yükü q₀" deger={testYuk} min={-1} max={1} onChange={setTestYuk} basamak={2} renk="#15803d" />
           )}
           {adim < 2 && <Anahtar etiket="ikinci yük" deger={ikinciVar} onChange={setIkinciVar} />}
           <Dugme onClick={() => setOynat(!oynat)} aktif={oynat} boyut="sm">
@@ -151,19 +151,17 @@ function ElektrikSahne({ adim }: SahneProps) {
         </>
       }
       sahne={
-        <Sahne kamera={[5, 4, 8]} izgara={false} maxUzaklik={30} otoDondur={adim === 1}>
+        <Sahne kamera={[5, 4, 8]} zemin="yok" maxUzaklik={30} otoDondur={adim === 1}>
           {/* Yükler */}
           {yukler.map((y, i) => (
             <group key={i}>
               <mesh position={y.p}>
                 <sphereGeometry args={[0.15 + Math.abs(y.q) * 0.06, 24, 24]} />
                 <meshStandardMaterial
-                  color={y.q >= 0 ? '#ff7a45' : '#4aa8ff'}
-                  emissive={y.q >= 0 ? '#ff7a45' : '#4aa8ff'}
-                  emissiveIntensity={0.55}
+                  color={y.q >= 0 ? '#e0602e' : '#2f7fd4'}
                 />
               </mesh>
-              <Etiket konum={[y.p[0], y.p[1] + 0.55, y.p[2]]} renk={y.q >= 0 ? '#ffb454' : '#7dd3fc'} kucuk>
+              <Etiket konum={[y.p[0], y.p[1] + 0.55, y.p[2]]} renk={y.q >= 0 ? '#b45309' : '#0369a1'} kucuk>
                 {y.q >= 0 ? '+' : '−'}
                 {Math.abs(y.q).toFixed(1)} μC
               </Etiket>
@@ -176,7 +174,7 @@ function ElektrikSahne({ adim }: SahneProps) {
           ))}
 
           {adim === 0 && (
-            <Etiket konum={[0, -1.6, 0]} renk="#94a3b8" kucuk>
+            <Etiket konum={[0, -1.6, 0]} renk="#6b7280" kucuk>
               yükün çevresindeki her noktada bir elektrik alan vardır
             </Etiket>
           )}
@@ -184,11 +182,11 @@ function ElektrikSahne({ adim }: SahneProps) {
           {/* Test yükü, alan ve kuvvet vektörleri */}
           {adim >= 3 && (
             <>
-              <Nokta konum={Ptest} renk={testYuk >= 0 ? '#4ade80' : '#f472b6'} r={0.12} />
+              <Nokta konum={Ptest} renk={testYuk >= 0 ? '#15803d' : '#be185d'} r={0.12} />
               <Ok
                 baslangic={Ptest}
                 bitis={[Ptest[0] + E[0] * okOlcek, Ptest[1] + E[1] * okOlcek, Ptest[2] + E[2] * okOlcek]}
-                renk="#f472b6"
+                renk="#be185d"
                 kalinlik={0.03}
                 baslikBoyu={0.22}
               />
@@ -199,21 +197,21 @@ function ElektrikSahne({ adim }: SahneProps) {
                   Ptest[1] + E[1] * okOlcek * testYuk,
                   Ptest[2] + E[2] * okOlcek * testYuk,
                 ]}
-                renk="#4ade80"
+                renk="#15803d"
                 kalinlik={0.034}
                 baslikBoyu={0.22}
               />
-              <Etiket konum={[Ptest[0] + 0.5, Ptest[1] + 0.5, Ptest[2]]} renk="#f472b6" kucuk>
+              <Etiket konum={[Ptest[0] + 0.5, Ptest[1] + 0.5, Ptest[2]]} renk="#be185d" kucuk>
                 E
               </Etiket>
-              <Etiket konum={[Ptest[0] - 0.5, Ptest[1] - 0.5, Ptest[2]]} renk="#4ade80" kucuk>
+              <Etiket konum={[Ptest[0] - 0.5, Ptest[1] - 0.5, Ptest[2]]} renk="#15803d" kucuk>
                 F = q₀E
               </Etiket>
             </>
           )}
 
           {adim >= 4 && (
-            <Etiket konum={[0, -2.6, 0]} renk="#8b7dff" kucuk>
+            <Etiket konum={[0, -2.6, 0]} renk="#4338ca" kucuk>
               alan çizgilerinin sıklığı = alan şiddeti · çizgiler + yükten çıkar, − yükte biter
             </Etiket>
           )}

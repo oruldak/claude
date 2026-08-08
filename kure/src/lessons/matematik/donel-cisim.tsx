@@ -82,9 +82,9 @@ function DonelSahne({ adim }: SahneProps) {
         <Gosterge
           satirlar={[
             { ad: 'dilim sayısı', deger: adim >= 2 ? nEt : '—' },
-            { ad: 'disk toplamı', deger: adim >= 2 ? yaklasik.toFixed(4) : '—', renk: '#ffb454' },
-            { ad: 'kesin hacim', deger: kesin.toFixed(4), renk: '#38e1c6' },
-            { ad: 'dönme açısı', deger: `${Math.round((theta * 180) / Math.PI)}°`, renk: '#8b7dff' },
+            { ad: 'disk toplamı', deger: adim >= 2 ? yaklasik.toFixed(4) : '—', renk: '#b45309' },
+            { ad: 'kesin hacim', deger: kesin.toFixed(4), renk: '#0f766e' },
+            { ad: 'dönme açısı', deger: `${Math.round((theta * 180) / Math.PI)}°`, renk: '#4338ca' },
           ]}
         />
       }
@@ -107,7 +107,7 @@ function DonelSahne({ adim }: SahneProps) {
           </div>
           <Kaydirac etiket="a" deger={a} min={0} max={b - 0.5} onChange={setA} basamak={1} />
           <Kaydirac etiket="b" deger={b} min={a + 0.5} max={fn.enBuyukB} onChange={setB} basamak={1} />
-          <Kaydirac etiket="dilim (n)" deger={n} min={2} max={60} adim={1} basamak={0} onChange={setN} renk="#ffb454" />
+          <Kaydirac etiket="dilim (n)" deger={n} min={2} max={60} adim={1} basamak={0} onChange={setN} renk="#b45309" />
           <Anahtar etiket="katı yüzey" deger={katiGoster} onChange={setKatiGoster} />
           <Dugme onClick={() => setOynat(!oynat)} aktif={oynat} boyut="sm">
             {oynat ? '⏸ durdur' : '▶ oynat'}
@@ -115,17 +115,17 @@ function DonelSahne({ adim }: SahneProps) {
         </>
       }
       sahne={
-        <Sahne kamera={[4.5, 4, 8]} izgara maxUzaklik={30} otoDondur={adim >= 4}>
+        <Sahne kamera={[5, 3.6, 8.5]} zemin="studyo" zeminY={-1.6} maxUzaklik={30} otoDondur={adim >= 4}>
           <Eksenler boy={5.5} eksiBoy={1.2} zBoy={3} bolme={1} adlar={['x', 'y', 'z']} />
 
           {/* Döndürülen bölgenin sınırı */}
-          <Egri f={fn.f} x0={a} x1={b} renk="#7dd3fc" kalinlik={3.4} />
-          <Line points={[[a, 0, 0], [b, 0, 0]] as V3[]} color="#7dd3fc" lineWidth={2} />
-          <Line points={[[a, 0, 0], [a, fn.f(a), 0]] as V3[]} color="#7dd3fc" lineWidth={2} />
-          <Line points={[[b, 0, 0], [b, fn.f(b), 0]] as V3[]} color="#7dd3fc" lineWidth={2} />
+          <Egri f={fn.f} x0={a} x1={b} renk="#0369a1" kalinlik={3.4} />
+          <Line points={[[a, 0, 0], [b, 0, 0]] as V3[]} color="#0369a1" lineWidth={2} />
+          <Line points={[[a, 0, 0], [a, fn.f(a), 0]] as V3[]} color="#0369a1" lineWidth={2} />
+          <Line points={[[b, 0, 0], [b, fn.f(b), 0]] as V3[]} color="#0369a1" lineWidth={2} />
 
           {adim === 0 && (
-            <Etiket konum={[(a + b) / 2, fn.f((a + b) / 2) / 2 + 0.2, 0]} renk="#7dd3fc">
+            <Etiket konum={[(a + b) / 2, fn.f((a + b) / 2) / 2 + 0.2, 0]} renk="#0369a1">
               bu bölge x ekseni etrafında dönecek
             </Etiket>
           )}
@@ -136,7 +136,7 @@ function DonelSahne({ adim }: SahneProps) {
               <mesh>
                 <latheGeometry args={[latheNoktalari, 72, 0, theta]} />
                 <meshStandardMaterial
-                  color="#38e1c6"
+                  color="#0f766e"
                   transparent
                   opacity={adim >= 2 ? 0.18 : 0.42}
                   side={THREE.DoubleSide}
@@ -153,7 +153,7 @@ function DonelSahne({ adim }: SahneProps) {
               <mesh key={i} position={[d.x, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
                 <cylinderGeometry args={[d.r, d.r, dx * 0.94, 40, 1, false]} />
                 <meshStandardMaterial
-                  color={i % 2 ? '#ffb454' : '#ffa03a'}
+                  color={i % 2 ? '#b45309' : '#c2620a'}
                   transparent
                   opacity={nEt > 30 ? 0.7 : 0.55}
                   roughness={0.4}
@@ -169,20 +169,20 @@ function DonelSahne({ adim }: SahneProps) {
                   [diskler[2].x, 0, 0],
                   [diskler[2].x, diskler[2].r, 0],
                 ]}
-                color="#f472b6"
+                color="#be185d"
                 lineWidth={2.6}
               />
-              <Etiket konum={[diskler[2].x, diskler[2].r + 0.45, 0]} renk="#f472b6" kucuk>
+              <Etiket konum={[diskler[2].x, diskler[2].r + 0.45, 0]} renk="#be185d" kucuk>
                 yarıçap = f(x)
               </Etiket>
-              <Etiket konum={[diskler[2].x, -0.55, 0]} renk="#f472b6" kucuk>
+              <Etiket konum={[diskler[2].x, -0.55, 0]} renk="#be185d" kucuk>
                 kalınlık = dx
               </Etiket>
             </>
           )}
 
           {adim >= 4 && (
-            <Etiket konum={[(a + b) / 2, -1.6, 0]} renk="#38e1c6">
+            <Etiket konum={[(a + b) / 2, -1.6, 0]} renk="#0f766e">
               V = π∫ₐᵇ f(x)² dx = {kesin.toFixed(3)}
             </Etiket>
           )}

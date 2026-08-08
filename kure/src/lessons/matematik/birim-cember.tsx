@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Cizgi as Line, Egri, Etiket, Nokta, Sahne, UzayEgrisi, type V3 } from '../shared/sahne'
+import { Cizgi as Line, Egri, Etiket, KareliKagit, Nokta, Sahne, UzayEgrisi, type V3 } from '../shared/sahne'
 import { Anahtar, Dugme, Duzen, Gosterge, Kaydirac } from '../shared/ui'
 import { useZaman } from '../shared/animasyon'
 import type { DersModulu, SahneProps } from '../types'
@@ -56,10 +56,10 @@ function BirimCemberSahne({ adim }: SahneProps) {
       gosterge={
         <Gosterge
           satirlar={[
-            { ad: 'θ (radyan)', deger: th.toFixed(3), renk: '#8b7dff' },
+            { ad: 'θ (radyan)', deger: th.toFixed(3), renk: '#4338ca' },
             { ad: 'θ (derece)', deger: `${((th * 180) / Math.PI).toFixed(1)}°` },
-            { ad: 'cos θ', deger: Math.cos(th).toFixed(3), renk: '#ffb454' },
-            { ad: 'sin θ', deger: Math.sin(th).toFixed(3), renk: '#38e1c6' },
+            { ad: 'cos θ', deger: Math.cos(th).toFixed(3), renk: '#b45309' },
+            { ad: 'sin θ', deger: Math.sin(th).toFixed(3), renk: '#0f766e' },
           ]}
         />
       }
@@ -77,52 +77,53 @@ function BirimCemberSahne({ adim }: SahneProps) {
               setElle(v)
               setOynat(false)
             }}
-            renk="#8b7dff"
+            renk="#4338ca"
           />
-          <Anahtar etiket="kosinüs eğrisi" deger={cosGoster} onChange={setCosGoster} renk="#ffb454" />
+          <Anahtar etiket="kosinüs eğrisi" deger={cosGoster} onChange={setCosGoster} renk="#b45309" />
           {adim >= 5 && (
             <>
               <Kaydirac etiket="genlik a" deger={genlik} min={0.2} max={2} onChange={setGenlik} basamak={1} />
-              <Kaydirac etiket="b (periyot)" deger={periyotK} min={0.5} max={4} onChange={setPeriyotK} basamak={1} renk="#ffb454" />
-              <Kaydirac etiket="c (öteleme)" deger={oteleme} min={-3.14} max={3.14} onChange={setOteleme} basamak={2} renk="#f472b6" />
+              <Kaydirac etiket="b (periyot)" deger={periyotK} min={0.5} max={4} onChange={setPeriyotK} basamak={1} renk="#b45309" />
+              <Kaydirac etiket="c (öteleme)" deger={oteleme} min={-3.14} max={3.14} onChange={setOteleme} basamak={2} renk="#be185d" />
             </>
           )}
         </>
       }
       sahne={
-        <Sahne kamera={[0, 1.5, 13]} izgara={false} maxUzaklik={36}>
+        <Sahne kamera={[0, 1.5, 13]} zemin="yok" maxUzaklik={36}>
+          <KareliKagit genislik={20} yukseklik={10} z={-0.2} />
           {/* Çember ve eksenleri */}
-          <Line points={cember} color="#334867" lineWidth={2} />
-          <Line points={[[CX - R - 0.6, 0, 0], [CX + R + 0.6, 0, 0]] as V3[]} color="#3d4d6b" lineWidth={1.4} />
-          <Line points={[[CX, -R - 0.6, 0], [CX, R + 0.6, 0]] as V3[]} color="#3d4d6b" lineWidth={1.4} />
-          <Etiket konum={[CX, -R - 1.05, 0]} renk="#64748b" kucuk>
+          <Line points={cember} color="#c9c0b1" lineWidth={2} />
+          <Line points={[[CX - R - 0.6, 0, 0], [CX + R + 0.6, 0, 0]] as V3[]} color="#a9a294" lineWidth={1.4} />
+          <Line points={[[CX, -R - 0.6, 0], [CX, R + 0.6, 0]] as V3[]} color="#a9a294" lineWidth={1.4} />
+          <Etiket konum={[CX, -R - 1.05, 0]} renk="#8a8f9c" kucuk>
             birim çember (r = 1)
           </Etiket>
 
           {/* Yönlü açı ve yay */}
-          <Line points={[[CX, 0, 0], P]} color="#8b7dff" lineWidth={2.6} />
-          {yay.length > 1 && <Line points={yay} color="#8b7dff" lineWidth={4} />}
-          <Nokta konum={P} renk="#e6ecf7" r={0.11} />
-          <Etiket konum={[CX + 0.55 * Math.cos(th / 2), 0.55 * Math.sin(th / 2), 0]} renk="#8b7dff" kucuk>
+          <Line points={[[CX, 0, 0], P]} color="#4338ca" lineWidth={2.6} />
+          {yay.length > 1 && <Line points={yay} color="#4338ca" lineWidth={4} />}
+          <Nokta konum={P} renk="#191d24" r={0.11} />
+          <Etiket konum={[CX + 0.55 * Math.cos(th / 2), 0.55 * Math.sin(th / 2), 0]} renk="#4338ca" kucuk>
             θ
           </Etiket>
 
           {/* sin ve cos bileşenleri */}
           {adim >= 1 && (
             <>
-              <Line points={[[P[0], 0, 0], P]} color="#38e1c6" lineWidth={3} />
-              <Line points={[[CX, 0, 0], [P[0], 0, 0]] as V3[]} color="#ffb454" lineWidth={3} />
-              <Etiket konum={[P[0] + 0.55, P[1] / 2, 0]} renk="#38e1c6" kucuk>
+              <Line points={[[P[0], 0, 0], P]} color="#0f766e" lineWidth={3} />
+              <Line points={[[CX, 0, 0], [P[0], 0, 0]] as V3[]} color="#b45309" lineWidth={3} />
+              <Etiket konum={[P[0] + 0.55, P[1] / 2, 0]} renk="#0f766e" kucuk>
                 sin θ
               </Etiket>
-              <Etiket konum={[(CX + P[0]) / 2, -0.42, 0]} renk="#ffb454" kucuk>
+              <Etiket konum={[(CX + P[0]) / 2, -0.42, 0]} renk="#b45309" kucuk>
                 cos θ
               </Etiket>
             </>
           )}
 
           {adim === 2 && (
-            <Etiket konum={[CX, R + 1.15, 0]} renk="#8b7dff" kucuk>
+            <Etiket konum={[CX, R + 1.15, 0]} renk="#4338ca" kucuk>
               yay uzunluğu = θ  →  radyanın tanımı
             </Etiket>
           )}
@@ -130,24 +131,24 @@ function BirimCemberSahne({ adim }: SahneProps) {
           {/* Sinüs grafiğinin doğuşu */}
           {adim >= 3 && (
             <>
-              <Line points={[[G0 - 0.4, 0, 0], [G0 + Math.PI * 2 * R + 0.5, 0, 0]] as V3[]} color="#3d4d6b" lineWidth={1.4} />
-              <Line points={[[G0, -R * 2.1, 0], [G0, R * 2.1, 0]] as V3[]} color="#3d4d6b" lineWidth={1.4} />
-              <Egri f={sinF} x0={G0} x1={adim >= 5 ? G0 + Math.PI * 2 * R : grafikSonu} renk="#38e1c6" kalinlik={3.2} adet={300} />
+              <Line points={[[G0 - 0.4, 0, 0], [G0 + Math.PI * 2 * R + 0.5, 0, 0]] as V3[]} color="#a9a294" lineWidth={1.4} />
+              <Line points={[[G0, -R * 2.1, 0], [G0, R * 2.1, 0]] as V3[]} color="#a9a294" lineWidth={1.4} />
+              <Egri f={sinF} x0={G0} x1={adim >= 5 ? G0 + Math.PI * 2 * R : grafikSonu} renk="#0f766e" kalinlik={3.2} adet={300} />
               {(cosGoster || adim >= 5) && (
-                <Egri f={cosF} x0={G0} x1={adim >= 5 ? G0 + Math.PI * 2 * R : grafikSonu} renk="#ffb454" kalinlik={2.6} adet={300} kesikli />
+                <Egri f={cosF} x0={G0} x1={adim >= 5 ? G0 + Math.PI * 2 * R : grafikSonu} renk="#b45309" kalinlik={2.6} adet={300} kesikli />
               )}
               {/* P noktasının yüksekliğini grafiğe taşıyan bağ */}
               <Line
                 points={[P, [G0 + th * R, P[1], 0]] as V3[]}
-                color="#38e1c6"
+                color="#0f766e"
                 lineWidth={1.3}
                 dashed
                 dashSize={0.16}
                 gapSize={0.12}
               />
-              <Nokta konum={[G0 + th * R, A * R * Math.sin(b * th + c), 0]} renk="#38e1c6" r={0.1} />
+              <Nokta konum={[G0 + th * R, A * R * Math.sin(b * th + c), 0]} renk="#0f766e" r={0.1} />
               {[Math.PI / 2, Math.PI, (3 * Math.PI) / 2, Math.PI * 2].map((v) => (
-                <Etiket key={v} konum={[G0 + v * R, -0.45, 0]} renk="#64748b" arka="transparent" kucuk>
+                <Etiket key={v} konum={[G0 + v * R, -0.45, 0]} renk="#8a8f9c" arka="transparent" kucuk>
                   {v === Math.PI ? 'π' : v === Math.PI * 2 ? '2π' : v === Math.PI / 2 ? 'π/2' : '3π/2'}
                 </Etiket>
               ))}
@@ -157,26 +158,26 @@ function BirimCemberSahne({ adim }: SahneProps) {
           {/* Sarmal: tek eğrinin iki gölgesi */}
           {adim === 4 && (
             <>
-              <UzayEgrisi f={helix} t0={0} t1={Math.max(helixSon, 0.05)} renk="#f472b6" kalinlik={3} />
+              <UzayEgrisi f={helix} t0={0} t1={Math.max(helixSon, 0.05)} renk="#be185d" kalinlik={3} />
               <UzayEgrisi
                 f={(u) => [CX - R - 1.2, R * Math.sin(u), -u * 0.62]}
                 t0={0}
                 t1={Math.max(helixSon, 0.05)}
-                renk="#38e1c6"
+                renk="#0f766e"
                 kalinlik={2.4}
               />
               <UzayEgrisi
                 f={(u) => [CX + R * Math.cos(u), -R - 1.2, -u * 0.62]}
                 t0={0}
                 t1={Math.max(helixSon, 0.05)}
-                renk="#ffb454"
+                renk="#b45309"
                 kalinlik={2.4}
               />
-              <Nokta konum={helix(th)} renk="#f472b6" r={0.11} />
-              <Etiket konum={[CX - R - 1.2, R + 0.5, -helixSon * 0.62]} renk="#38e1c6" kucuk>
+              <Nokta konum={helix(th)} renk="#be185d" r={0.11} />
+              <Etiket konum={[CX - R - 1.2, R + 0.5, -helixSon * 0.62]} renk="#0f766e" kucuk>
                 sin gölgesi
               </Etiket>
-              <Etiket konum={[CX, -R - 1.7, -helixSon * 0.62]} renk="#ffb454" kucuk>
+              <Etiket konum={[CX, -R - 1.7, -helixSon * 0.62]} renk="#b45309" kucuk>
                 cos gölgesi
               </Etiket>
             </>

@@ -10,7 +10,7 @@ function Kemik({
   a,
   b,
   r = 0.11,
-  renk = '#e2e8f0',
+  renk = '#f2ede3',
   opaklik = 1,
 }: {
   a: V3
@@ -37,8 +37,8 @@ function Kemik({
   )
 }
 
-const EKSEN_RENK = '#e2e8f0'
-const UYE_RENK = '#9fb3d1'
+const EKSEN_RENK = '#f2ede3'
+const UYE_RENK = '#cdc7b8'
 
 function IskeletSahne({ adim }: SahneProps) {
   const [vurgu, setVurgu] = useState<'yok' | 'eksen' | 'uye'>('yok')
@@ -91,8 +91,8 @@ function IskeletSahne({ adim }: SahneProps) {
             { ad: 'üye iskeleti', deger: 'kollar · bacaklar · kuşaklar', renk: UYE_RENK },
             ...(adim >= 3
               ? [
-                  { ad: 'dirsek açısı', deger: `${dirsekAci.toFixed(0)}°`, renk: '#38e1c6' },
-                  { ad: 'ön kol kası', deger: dirsekAci > 60 ? 'biseps KASILIR' : 'triseps KASILIR', renk: dirsekAci > 60 ? '#f472b6' : '#ffb454' },
+                  { ad: 'dirsek açısı', deger: `${dirsekAci.toFixed(0)}°`, renk: '#0f766e' },
+                  { ad: 'ön kol kası', deger: dirsekAci > 60 ? 'biseps KASILIR' : 'triseps KASILIR', renk: dirsekAci > 60 ? '#be185d' : '#b45309' },
                 ]
               : []),
           ]}
@@ -113,13 +113,13 @@ function IskeletSahne({ adim }: SahneProps) {
                 {oto ? '⏸ durdur' : '▶ hareket'}
               </Dugme>
               {!oto && <Kaydirac etiket="dirsek açısı" deger={aciElle} min={10} max={125} adim={1} basamak={0} onChange={setAciElle} birim="°" />}
-              <Anahtar etiket="kaslar" deger={kasGoster} onChange={setKasGoster} renk="#f472b6" />
+              <Anahtar etiket="kaslar" deger={kasGoster} onChange={setKasGoster} renk="#be185d" />
             </>
           )}
         </>
       }
       sahne={
-        <Sahne kamera={[3.4, 2.6, 6.5]} izgara zeminY={0} maxUzaklik={28} otoDondur={adim === 0}>
+        <Sahne kamera={[3.4, 2.6, 6.5]} zeminY={0} maxUzaklik={28} otoDondur={adim === 0}>
           {/* Kafatası */}
           <mesh position={[0, 4.15, 0]}>
             <sphereGeometry args={[0.46, 28, 24]} />
@@ -188,7 +188,7 @@ function IskeletSahne({ adim }: SahneProps) {
                 {adim >= 2 && (
                   <mesh position={k.E}>
                     <sphereGeometry args={[0.15, 16, 16]} />
-                    <meshStandardMaterial color="#38e1c6" emissive="#38e1c6" emissiveIntensity={0.45} transparent opacity={0.75} />
+                    <meshStandardMaterial color="#0f766e" transparent opacity={0.75} />
                   </mesh>
                 )}
                 {/* Kaslar */}
@@ -198,14 +198,14 @@ function IskeletSahne({ adim }: SahneProps) {
                       a={[k.S[0] + s * 0.05, k.S[1] - 0.08, 0.12]}
                       b={k.kasUcu}
                       r={0.09 + (dirsekAci / 125) * 0.09}
-                      renk="#f472b6"
+                      renk="#be185d"
                       opaklik={0.75}
                     />
                     <Kemik
                       a={[k.S[0] - s * 0.05, k.S[1] - 0.1, -0.14]}
                       b={[k.E[0] - s * 0.02, k.E[1] - 0.05, -0.16]}
                       r={0.13 - (dirsekAci / 125) * 0.06}
-                      renk="#ffb454"
+                      renk="#b45309"
                       opaklik={0.7}
                     />
                   </>
@@ -215,10 +215,10 @@ function IskeletSahne({ adim }: SahneProps) {
           })}
           {adim >= 3 && kasGoster && (
             <>
-              <Etiket konum={[1.6, 2.55, 0.4]} renk="#f472b6" kucuk>
+              <Etiket konum={[1.6, 2.55, 0.4]} renk="#be185d" kucuk>
                 biseps (bükücü)
               </Etiket>
-              <Etiket konum={[1.6, 2.05, -0.5]} renk="#ffb454" kucuk>
+              <Etiket konum={[1.6, 2.05, -0.5]} renk="#b45309" kucuk>
                 triseps (açıcı)
               </Etiket>
             </>
@@ -238,7 +238,7 @@ function IskeletSahne({ adim }: SahneProps) {
                 {adim >= 2 && (
                   <mesh position={b.D}>
                     <sphereGeometry args={[0.16, 16, 16]} />
-                    <meshStandardMaterial color="#38e1c6" emissive="#38e1c6" emissiveIntensity={0.45} transparent opacity={0.75} />
+                    <meshStandardMaterial color="#0f766e" transparent opacity={0.75} />
                   </mesh>
                 )}
                 {adim >= 1 && s === 1 && (
@@ -251,7 +251,7 @@ function IskeletSahne({ adim }: SahneProps) {
           })}
 
           {adim >= 2 && (
-            <Etiket konum={[-1.9, 2.2, 0]} renk="#38e1c6" kucuk>
+            <Etiket konum={[-1.9, 2.2, 0]} renk="#0f766e" kucuk>
               yeşil noktalar: oynar eklemler
             </Etiket>
           )}

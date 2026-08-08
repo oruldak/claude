@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import * as THREE from 'three'
-import { Cizgi as Line, Etiket, Nokta, Ok, Sahne, type V3 } from '../shared/sahne'
+import { Cizgi as Line, Etiket, KareliKagit, Nokta, Ok, Sahne, type V3 } from '../shared/sahne'
 import { Dugme, Duzen, Gosterge, Kaydirac } from '../shared/ui'
 import type { DersModulu, SahneProps } from '../types'
 
@@ -35,7 +35,7 @@ function MercekGovde({ f }: { f: number }) {
       <mesh>
         <latheGeometry args={[noktalar, 48]} />
         <meshPhysicalMaterial
-          color="#7dd3fc"
+          color="#0369a1"
           transparent
           opacity={0.3}
           roughness={0.05}
@@ -102,16 +102,16 @@ function MercekSahne({ adim }: SahneProps) {
       gosterge={
         <Gosterge
           satirlar={[
-            { ad: 'mercek', deger: f > 0 ? 'ince kenarlı (yakınsak)' : 'kalın kenarlı (ıraksak)', renk: '#7dd3fc' },
-            { ad: 'odak f', deger: `${f.toFixed(2)}`, renk: '#ffb454' },
+            { ad: 'mercek', deger: f > 0 ? 'ince kenarlı (yakınsak)' : 'kalın kenarlı (ıraksak)', renk: '#0369a1' },
+            { ad: 'odak f', deger: `${f.toFixed(2)}`, renk: '#b45309' },
             { ad: 'cisim uzaklığı d₀', deger: do_.toFixed(2) },
             {
               ad: 'görüntü uzaklığı dᵢ',
               deger: Number.isFinite(di) ? di.toFixed(2) : 'sonsuz',
-              renk: gercek ? '#4ade80' : '#f472b6',
+              renk: gercek ? '#15803d' : '#be185d',
             },
             { ad: 'büyütme', deger: Number.isFinite(buyutme) ? buyutme.toFixed(2) : '—' },
-            { ad: 'görüntü', deger: gercek ? 'gerçek · ters' : 'sanal · düz', renk: gercek ? '#4ade80' : '#f472b6' },
+            { ad: 'görüntü', deger: gercek ? 'gerçek · ters' : 'sanal · düz', renk: gercek ? '#15803d' : '#be185d' },
           ]}
         />
       }
@@ -121,7 +121,7 @@ function MercekSahne({ adim }: SahneProps) {
             <Dugme onClick={() => setF(Math.abs(f))} aktif={f > 0} boyut="sm">
               ince kenarlı
             </Dugme>
-            <Dugme onClick={() => setF(-Math.abs(f))} aktif={f < 0} boyut="sm" renk="#f472b6">
+            <Dugme onClick={() => setF(-Math.abs(f))} aktif={f < 0} boyut="sm" renk="#be185d">
               kalın kenarlı
             </Dugme>
           </div>
@@ -132,64 +132,65 @@ function MercekSahne({ adim }: SahneProps) {
             max={3.4}
             onChange={(v) => setF(Math.sign(f) * v)}
             basamak={2}
-            renk="#ffb454"
+            renk="#b45309"
           />
           <Kaydirac etiket="cisim uzaklığı d₀" deger={do_} min={0.6} max={7} onChange={setCisimUzakligi} basamak={2} />
-          <Kaydirac etiket="cisim boyu" deger={ho} min={0.4} max={2} onChange={setHo} basamak={1} renk="#4ade80" />
+          <Kaydirac etiket="cisim boyu" deger={ho} min={0.4} max={2} onChange={setHo} basamak={1} renk="#15803d" />
           <Dugme boyut="sm" onClick={() => setCisimUzakligi(Math.abs(f) * 0.6)}>
             cismi odak içine al
           </Dugme>
         </>
       }
       sahne={
-        <Sahne kamera={[0, 2.2, 11]} izgara={false} maxUzaklik={34}>
+        <Sahne kamera={[0, 2.2, 11]} zemin="yok" maxUzaklik={34}>
+          <KareliKagit genislik={20} yukseklik={10} z={-0.3} birim={1} />
           {/* Optik eksen ve mercek */}
-          <Line points={[[-XMAX, 0, 0], [XMAX, 0, 0]] as V3[]} color="#334867" lineWidth={1.6} />
+          <Line points={[[-XMAX, 0, 0], [XMAX, 0, 0]] as V3[]} color="#c9c0b1" lineWidth={1.6} />
           <MercekGovde f={f} />
 
           {/* Odak noktaları */}
           {[-1, 1].map((s) => (
             <group key={s}>
-              <Nokta konum={[s * Math.abs(f), 0, 0]} renk="#ffb454" r={0.085} />
-              <Etiket konum={[s * Math.abs(f), -0.42, 0]} renk="#ffb454" kucuk>
+              <Nokta konum={[s * Math.abs(f), 0, 0]} renk="#b45309" r={0.085} />
+              <Etiket konum={[s * Math.abs(f), -0.42, 0]} renk="#b45309" kucuk>
                 {s < 0 ? 'F' : "F'"}
               </Etiket>
-              <Nokta konum={[s * Math.abs(f) * 2, 0, 0]} renk="#5b6b8c" r={0.07} />
-              <Etiket konum={[s * Math.abs(f) * 2, -0.42, 0]} renk="#64748b" kucuk>
+              <Nokta konum={[s * Math.abs(f) * 2, 0, 0]} renk="#8b8577" r={0.07} />
+              <Etiket konum={[s * Math.abs(f) * 2, -0.42, 0]} renk="#8a8f9c" kucuk>
                 2{s < 0 ? 'F' : "F'"}
               </Etiket>
             </group>
           ))}
 
           {/* Cisim */}
-          <Ok baslangic={[-do_, 0, 0]} bitis={[-do_, ho, 0]} renk="#4ade80" kalinlik={0.04} baslikBoyu={0.24} />
-          <Etiket konum={[-do_, ho + 0.4, 0]} renk="#4ade80" kucuk>
+          <Ok baslangic={[-do_, 0, 0]} bitis={[-do_, ho, 0]} renk="#15803d" kalinlik={0.04} baslikBoyu={0.24} />
+          <Etiket konum={[-do_, ho + 0.4, 0]} renk="#15803d" kucuk>
             cisim
           </Etiket>
 
           {/* Işınlar */}
           {adim >= 1 && (
             <>
-              <Line points={[[-do_, ho, 0], [0, ho, 0]] as V3[]} color="#38e1c6" lineWidth={2} />
-              <Line points={r1.duz} color="#38e1c6" lineWidth={2} />
-              {r1.kesik && <Line points={r1.kesik} color="#38e1c6" lineWidth={1.4} dashed dashSize={0.16} gapSize={0.12} />}
-              <Etiket konum={[-do_ / 2, ho + 0.28, 0]} renk="#38e1c6" kucuk>
+              <Line points={[[-do_, ho, 0], [0, ho, 0]] as V3[]} color="#0f766e" lineWidth={2} />
+              <Line points={r1.duz} color="#0f766e" lineWidth={2} />
+              {r1.kesik && <Line points={r1.kesik} color="#0f766e" lineWidth={1.4} dashed dashSize={0.16} gapSize={0.12} />}
+              <Etiket konum={[-do_ / 2, ho + 0.28, 0]} renk="#0f766e" kucuk>
                 ① eksene paralel gelir → odaktan geçer
               </Etiket>
             </>
           )}
           {adim >= 2 && (
             <>
-              <Line points={merkezIsin} color="#8b7dff" lineWidth={2} />
-              {merkezKesik && <Line points={merkezKesik} color="#8b7dff" lineWidth={1.4} dashed dashSize={0.16} gapSize={0.12} />}
-              <Etiket konum={[-do_ / 2, ho / 2 - 0.3, 0]} renk="#8b7dff" kucuk>
+              <Line points={merkezIsin} color="#4338ca" lineWidth={2} />
+              {merkezKesik && <Line points={merkezKesik} color="#4338ca" lineWidth={1.4} dashed dashSize={0.16} gapSize={0.12} />}
+              <Etiket konum={[-do_ / 2, ho / 2 - 0.3, 0]} renk="#4338ca" kucuk>
                 ② merkezden kırılmadan geçer
               </Etiket>
               {Number.isFinite(hi) && (
                 <>
-                  <Line points={[[-do_, ho, 0], [0, hi, 0]] as V3[]} color="#ffb454" lineWidth={2} />
-                  <Line points={r3.duz} color="#ffb454" lineWidth={2} />
-                  {r3.kesik && <Line points={r3.kesik} color="#ffb454" lineWidth={1.4} dashed dashSize={0.16} gapSize={0.12} />}
+                  <Line points={[[-do_, ho, 0], [0, hi, 0]] as V3[]} color="#b45309" lineWidth={2} />
+                  <Line points={r3.duz} color="#b45309" lineWidth={2} />
+                  {r3.kesik && <Line points={r3.kesik} color="#b45309" lineWidth={1.4} dashed dashSize={0.16} gapSize={0.12} />}
                 </>
               )}
             </>
@@ -201,26 +202,26 @@ function MercekSahne({ adim }: SahneProps) {
               <Ok
                 baslangic={[di, 0, 0]}
                 bitis={[di, hi, 0]}
-                renk={gercek ? '#4ade80' : '#f472b6'}
+                renk={gercek ? '#15803d' : '#be185d'}
                 kalinlik={0.04}
                 baslikBoyu={0.24}
                 opaklik={gercek ? 1 : 0.6}
               />
-              <Etiket konum={[di, hi + (hi > 0 ? 0.42 : -0.42), 0]} renk={gercek ? '#4ade80' : '#f472b6'} kucuk>
+              <Etiket konum={[di, hi + (hi > 0 ? 0.42 : -0.42), 0]} renk={gercek ? '#15803d' : '#be185d'} kucuk>
                 {gercek ? 'gerçek görüntü' : 'sanal görüntü'}
               </Etiket>
               {/* Perde: gerçek görüntü perdeye düşer */}
               {gercek && (
                 <mesh position={[di, 0, -0.02]} rotation={[0, 0, 0]}>
                   <planeGeometry args={[0.1, 4.4]} />
-                  <meshStandardMaterial color="#e6ecf7" transparent opacity={0.12} side={THREE.DoubleSide} />
+                  <meshStandardMaterial color="#191d24" transparent opacity={0.12} side={THREE.DoubleSide} />
                 </mesh>
               )}
             </>
           )}
 
           {adim >= 4 && (
-            <Etiket konum={[0, -2.8, 0]} renk="#7dd3fc" kucuk>
+            <Etiket konum={[0, -2.8, 0]} renk="#0369a1" kucuk>
               1/f = 1/d₀ + 1/dᵢ · büyütme = −dᵢ/d₀
             </Etiket>
           )}

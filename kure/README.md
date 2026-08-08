@@ -1,96 +1,130 @@
 # Küre — 3B Öğrenme Platformu
 
-İlkokul, ortaokul ve lise müfredatını **üç boyutlu, animasyonlu ve etkileşimli**
-ders modülleriyle anlatan okul uygulaması. Amaç ezber değil: öğrenci sahneyi
-döndürür, parametreleri değiştirir, sonucu anında görür ve konunun ispatını okur.
+İlkokul, ortaokul ve lise müfredatını **gerçek görsellerle, üç boyutlu ve
+animasyonlu** ders sahneleriyle anlatan okul uygulaması. Her ders bir soruyla
+başlar — *neden böyle?*, *nasıl oluyor?* — öğrenci sahnede kendi eliyle dener,
+sonunda ispatı ve ölçme sorularını görür.
 
-## Şu an ne var?
+## Tasarım ilkeleri
+
+1. **Grafik değil, gerçeklik.** Sahneler boşlukta yüzen çizgiler değil; çim
+   saha, ahşap tezgâh, kareli defter yaprağı gibi gerçek bir ortamın içinde
+   durur. Nesneler gölge düşürür, ışık gerçek hesaplanır.
+2. **Gerçek görseller.** Dünya, Ay ve gezegen dokuları NASA görüntülerinden
+   türetilmiş açık kaynak dokulardır (`public/doku/`). Sahne aydınlatması
+   gerçek bir HDR ortam haritasıyla yapılır (`public/hdr/`). Kart kapakları
+   yapay stok fotoğraf değil, dersin kendi sahnesinden alınmış gerçek
+   karelerdir (`public/kapak/`, `npm run kapaklar`).
+3. **Neden–nasıl akışı.** Adım başlıkları soru cümlesidir; her adım bir
+   gözlemi açıklar ve sonraki soruyu doğurur.
+4. **İspat zorunlu.** Her modülde formülün nereden çıktığı adım adım
+   türetilir; "ezberle" denmez.
+
+## Neler var?
 
 | Katman | Durum |
 | --- | --- |
 | **Müfredat ağacı** | 12 ders · 1–12. sınıf · ünite/tema → konu → kazanım (MEB Türkiye Yüzyılı Maarif Modeli yapısına göre) |
-| **3B ders modülleri** | 23 modül (matematik, fizik, kimya, biyoloji, fen bilimleri) |
+| **3B ders sahneleri** | 23 ders (matematik, fizik, kimya, biyoloji, fen bilimleri) |
 | **Ders oynatıcı** | Adım adım anlatım · canlı sahne · KaTeX ispat paneli · ölçme soruları · müfredat bağlantısı |
-| **İlerleme takibi** | Modül bazlı ilerleme + quiz puanı (tarayıcıda; sunucu arayüzü hazır) |
-| **Okul (multi-tenant)** | Alt alan adına göre okul profili, marka rengi, açık kademeler — `src/lib/okul.ts` |
+| **Ödev + çözüm sistemi** | Öğretmen ödev verir; öğrenci çözer; **yanlış yaptığı sorularda adım adım çözüm açılır** ve ilgili 3B derse bağlanır |
+| **Soru bankası** | Adım adım çözümlü, ipuçlu, çoktan seçmeli ve sayısal sorular (`src/soru/banka.ts`) |
+| **İlerleme takibi** | Modül ilerlemesi, quiz puanı, ödev sonuçları (tarayıcıda; sunucu arayüzü hazır) |
+| **Okul (multi-tenant)** | Alt alan adına göre okul profili, marka rengi, açık kademeler (`src/lib/okul.ts`) |
 
-### 3B modüller
+### 3B dersler
 
 **Matematik** — türev (kesen → teğet limiti), integral (Riemann toplamları →
-analizin temel teoremi), dönel cisim hacmi (disk yöntemi), birim çember
-(sinüs–kosinüs sarmalı), fonksiyon dönüşümleri, Pisagor (alanlarla ispat),
-geometrik cisimler (açınım katlama + kesit), kesirler.
+analizin temel teoremi), dönel cisim hacmi, birim çember (sinüs–kosinüs
+sarmalı), fonksiyon dönüşümleri, Pisagor (alanlarla ispat), geometrik cisimler
+(açınım katlama + kesit), kesirler.
 
-**Fizik** — eğik atış (3B, gezegen seçimli), basit sarkaç (enerji çubukları),
-eğik düzlem (serbest cisim diyagramı), elektrik alan (3B alan çizgileri),
-mercekler (üç ana ışın, gerçek/sanal görüntü).
+**Fizik** — eğik atış (çim sahada, gezegen seçimli), basit sarkaç (ahşap
+düzenek, metal küre, enerji çubukları), eğik düzlem, elektrik alan (3B alan
+çizgileri), mercekler (üç ana ışın, gerçek/sanal görüntü).
 
 **Kimya** — atom modeli (Bohr → orbital olasılık bulutu), molekül geometrisi
 (VSEPR), periyodik sistem (118 element, 3B eğilim haritası).
 
-**Biyoloji** — hücre (organeller + madde geçişi), kalp ve kan dolaşımı, nöron
-ve sinirsel iletim, DNA (replikasyon → transkripsiyon → translasyon), iskelet
-ve kas sistemi.
+**Biyoloji** — hücre, kalp ve kan dolaşımı, nöron ve sinirsel iletim, DNA
+(replikasyon → transkripsiyon → translasyon), iskelet ve kas sistemi.
 
 **Fen Bilimleri** — Güneş sistemi / Ay evreleri / tutulmalar, mevsimlerin
-oluşumu (eksen eğikliği, öğle açısı, gündüz süresi hesaplı).
+oluşumu (gerçek Dünya dokusu, öğle açısı ve gündüz süresi hesaplı).
 
 ## Çalıştırma
 
 ```bash
 npm install
-npm run dev      # geliştirme
-npm run build    # üretim derlemesi (dist/)
-npm run preview  # derlenmiş sürümü sun
-npm run smoke    # tüm sayfaları tarayıcıda gezip konsol hatası arar
+npm run dev        # geliştirme
+npm run build      # üretim derlemesi (dist/)
+npm run preview    # derlenmiş sürümü 4321 portunda sun
+npm run smoke      # 30 sayfayı tarayıcıda gezip konsol hatası arar
+npm run kapaklar   # ders kartlarının kapak görsellerini yeniden üretir
 ```
 
-`npm run smoke` için önce `npm run preview` ile sunucunun 4321 portunda
-ayakta olması gerekir.
+`smoke` ve `kapaklar`, `preview` sunucusunun ayakta olmasını bekler.
 
 ## Mimari
 
 ```
+public/
+  doku/     gerçek dokular (NASA türevli gök cisimleri, ahşap, çim, tuğla)
+  hdr/      ortam aydınlatma haritası
+  kapak/    ders kartı kapakları (sahnelerden üretilmiş gerçek kareler)
 src/
   curriculum/     müfredat verisi (ders → sınıf → ünite → konu → kazanım)
+  soru/banka.ts   adım adım çözümlü soru bankası
   lessons/
-    shared/       ortak 3B araç takımı (Sahne, Etiket, Ok, Eksenler, Egri, Cizgi…)
+    shared/       3B araç takımı: Sahne (zemin, gölge, IBL), KareliKagit,
+                  gokcisimleri (Dünya/Ay/Güneş), Etiket, Ok, Eksenler, Egri…
                   ve kontrol arayüzü (Kaydirac, Dugme, Gosterge, Tex…)
-    matematik/    her dosya bir DersModulu: sahne + adımlar + ispat + sorular
-    fizik/ kimya/ biyoloji/ fen/
+    matematik/ fizik/ kimya/ biyoloji/ fen/
     registry.ts   sahne kimliği → modül eşlemesi
-  components/     Kabuk, DersOynatici, Quiz
-  pages/          ana sayfa, kademe, ders, modül, arama, panel
-  lib/            tipler, ilerleme (zustand + localStorage), okul profili
+  components/     Kabuk, DersOynatici, ModulKarti, Quiz
+  pages/          ana sayfa, kademe, ders, modül, ödevler, ödev, arama, panel
+  lib/            tipler, ilerleme, ödev, okul profili
 ```
 
-Bir konuyu 3B modüle bağlamak için müfredat verisindeki konuya `sahne: 'modul-id'`
-yazmak yeterlidir; ders sayfası, arama ve panel bağlantıyı otomatik kurar.
+Bir konuyu 3B derse bağlamak için müfredattaki konuya `sahne: 'modul-id'`
+yazmak yeterlidir; ders sayfası, arama ve panel bağlantıyı kendiliğinden kurar.
 
-### Yeni modül eklemek
+### Yeni ders eklemek
 
-1. `src/lessons/<ders>/<ad>.tsx` içinde `DersModulu` dışa aktar:
-   `Sahne` (adım numarasını prop olarak alır), `adimlar`, `ispat`, `sorular`.
+1. `src/lessons/<ders>/<ad>.tsx` içinde `DersModulu` dışa aktar: `Sahne`
+   (adım numarasını prop alır), `adimlar`, `ispat`, `sorular`.
 2. `src/lessons/registry.ts` içine ekle.
 3. İlgili müfredat konusuna `sahne: '<id>'` alanını yaz.
+4. `npm run kapaklar` ile kapak görselini üret.
+
+### Yeni ödev sorusu eklemek
+
+`src/soru/banka.ts` içine `BankaSorusu` ekle: soru, doğru cevap, **ipucu**,
+**adım adım çözüm** (`cozum[]`, LaTeX destekli) ve varsa `modul` bağlantısı.
+Öğretmen paneli soruları buradan seçerek ödev oluşturur.
 
 ## Performans notları
 
-- Sahneler React durumu ile sürüldüğü için `useZaman` ~42 fps ile sınırlandırıldı.
-- `Cizgi` bileşeni, nokta değerleri değişmediği sürece aynı dizi referansını
-  koruyarak her karede yeni `LineGeometry` ayrılmasını engeller.
-- Etiketler DOM tabanlıdır (drei `Html`); böylece harici yazı tipi indirilmez ve
-  Türkçe karakterler sorunsuz görünür.
+- Sahneler React durumu ile sürülür; `useZaman` ~42 fps ile sınırlandırıldı.
+- `Cizgi`, nokta değerleri değişmediği sürece aynı dizi referansını koruyarak
+  her karede yeni `LineGeometry` ayrılmasını engeller.
+- Etiketler DOM tabanlıdır (drei `Html`); harici yazı tipi indirilmez, Türkçe
+  karakterler sorunsuz görünür.
+- `Eksenler` bileşeninde `bolme = 0` verildiğinde tik üretimi kapatılır
+  (sıfıra bölme kaynaklı sonsuz döngü koruması).
 
 ## Yol haritası
 
-1. Kalan müfredat başlıkları için modül üretimi.
-2. Okul bazlı giriş paneli, sınıf–şube ve öğretmen yönetimi.
+1. Kalan müfredat başlıkları için 3B ders üretimi.
+2. Okul bazlı giriş paneli, sınıf–şube ve öğretmen yönetimi; ödevlerin
+   sunucuda tutulması.
 3. Okul başına ayrı sunucu / alt alan adı, marka ve tema özelleştirmesi.
-4. Ödev, sınav ve karne raporlaması; veli görünümü.
+4. Sınav, karne raporlaması ve veli görünümü.
 
-## Not
+## Varlık kaynakları
 
-Müfredat verisi kamuya açık MEB öğretim programı yapısına göre sadeleştirilerek
-hazırlanmıştır ve okul zümreleri tarafından `src/curriculum/` altından
-güncellenebilir.
+`public/doku/` ve `public/hdr/` altındaki dokular three.js deposunun örnek
+varlıklarından alınmıştır (gök cismi dokuları NASA görüntülerinden türetilmiş,
+HDR ortam haritası Poly Haven kaynaklıdır). Müfredat verisi kamuya açık MEB
+öğretim programı yapısına göre sadeleştirilmiştir ve okul zümreleri tarafından
+`src/curriculum/` altından güncellenebilir.

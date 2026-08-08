@@ -34,9 +34,9 @@ const OKS_BAS = 9
 const OKS_SON = 18
 
 const ODACIKLAR = [
-  { ad: 'Sağ kulakçık', kisa: 'RA', p: [-1.1, 1.0, 0] as V3, r: 0.72, renk: '#4aa8ff', karincik: false },
+  { ad: 'Sağ kulakçık', kisa: 'RA', p: [-1.1, 1.0, 0] as V3, r: 0.72, renk: '#2f7fd4', karincik: false },
   { ad: 'Sağ karıncık', kisa: 'RV', p: [-1.0, -0.85, 0] as V3, r: 0.92, renk: '#3b82f6', karincik: true },
-  { ad: 'Sol kulakçık', kisa: 'LA', p: [1.1, 1.05, -0.1] as V3, r: 0.68, renk: '#f87171', karincik: false },
+  { ad: 'Sol kulakçık', kisa: 'LA', p: [1.1, 1.05, -0.1] as V3, r: 0.68, renk: '#ef6b6b', karincik: false },
   { ad: 'Sol karıncık', kisa: 'LV', p: [0.95, -0.95, 0] as V3, r: 1.02, renk: '#ef4444', karincik: true },
 ]
 
@@ -96,8 +96,8 @@ function KalpSahne({ adim }: SahneProps) {
         <Gosterge
           satirlar={[
             { ad: 'nabız', deger: `${nabiz.toFixed(0)} /dk` },
-            { ad: 'evre', deger: karincikSistol ? 'karıncık sistolü' : kulakcikSistol ? 'kulakçık sistolü' : 'diyastol', renk: karincikSistol ? '#ef4444' : '#7dd3fc' },
-            { ad: 'kirli kan', deger: 'sağ taraf', renk: '#4aa8ff' },
+            { ad: 'evre', deger: karincikSistol ? 'karıncık sistolü' : kulakcikSistol ? 'kulakçık sistolü' : 'diyastol', renk: karincikSistol ? '#ef4444' : '#0369a1' },
+            { ad: 'kirli kan', deger: 'sağ taraf', renk: '#2f7fd4' },
             { ad: 'temiz kan', deger: 'sol taraf', renk: '#ef4444' },
             { ad: 'dolaşım süresi', deger: `${(periyot * 2).toFixed(2)} s (yaklaşık)` },
           ]}
@@ -114,9 +114,9 @@ function KalpSahne({ adim }: SahneProps) {
         </>
       }
       sahne={
-        <Sahne kamera={[0.5, 1.5, 9]} izgara={false} maxUzaklik={26} otoDondur={adim === 0}>
+        <Sahne kamera={[0.5, 1.5, 9]} zemin="yok" maxUzaklik={26} otoDondur={adim === 0}>
           {/* Damarlar */}
-          {(!kucukDolasim || true) && <Damar noktalar={kirli} renk="#4aa8ff" />}
+          {(!kucukDolasim || true) && <Damar noktalar={kirli} renk="#2f7fd4" />}
           <Damar noktalar={temiz} renk="#ef4444" />
           <Damar noktalar={geriDonus} renk="#ef4444" />
 
@@ -161,13 +161,13 @@ function KalpSahne({ adim }: SahneProps) {
                   <mesh position={k.p} rotation={[Math.PI / 2, 0, 0]}>
                     <torusGeometry args={[0.24, 0.05, 10, 24]} />
                     <meshStandardMaterial
-                      color={acik ? '#4ade80' : '#94a3b8'}
-                      emissive={acik ? '#4ade80' : '#000000'}
+                      color={acik ? '#15803d' : '#6b7280'}
+                      emissive={acik ? '#15803d' : '#000000'}
                       emissiveIntensity={acik ? 0.5 : 0}
                     />
                   </mesh>
                   {etiket && (
-                    <Etiket konum={[k.p[0], k.p[1] - 0.36, k.p[2]]} renk={acik ? '#4ade80' : '#94a3b8'} kucuk>
+                    <Etiket konum={[k.p[0], k.p[1] - 0.36, k.p[2]]} renk={acik ? '#15803d' : '#6b7280'} kucuk>
                       {k.ad} · {acik ? 'açık' : 'kapalı'}
                     </Etiket>
                   )}
@@ -187,9 +187,9 @@ function KalpSahne({ adim }: SahneProps) {
               <mesh key={i} position={[p.x, p.y, p.z]}>
                 <sphereGeometry args={[0.085, 10, 10]} />
                 <meshStandardMaterial
-                  color={oksijenli ? '#ef4444' : '#4aa8ff'}
-                  emissive={oksijenli ? '#ef4444' : '#4aa8ff'}
-                  emissiveIntensity={0.75}
+                  color={oksijenli ? '#ef4444' : '#2f7fd4'}
+                  emissive={oksijenli ? '#ef4444' : '#2f7fd4'}
+                  emissiveIntensity={0.21}
                 />
               </mesh>
             )
@@ -198,10 +198,10 @@ function KalpSahne({ adim }: SahneProps) {
           {/* Akciğerler */}
           {etiket && (
             <>
-              <Etiket konum={[-3.2, 3.5, -0.8]} renk="#7dd3fc" kucuk>
+              <Etiket konum={[-3.2, 3.5, -0.8]} renk="#0369a1" kucuk>
                 sağ akciğer
               </Etiket>
-              <Etiket konum={[3.2, 3.5, -0.8]} renk="#7dd3fc" kucuk>
+              <Etiket konum={[3.2, 3.5, -0.8]} renk="#0369a1" kucuk>
                 sol akciğer — burada O₂ alınır
               </Etiket>
               <Etiket konum={[-0.1, 4.1, 0.2]} renk="#ef4444" kucuk>
@@ -211,7 +211,7 @@ function KalpSahne({ adim }: SahneProps) {
           )}
 
           {kucukDolasim && (
-            <Etiket konum={[0, -2.6, 0]} renk="#4aa8ff">
+            <Etiket konum={[0, -2.6, 0]} renk="#2f7fd4">
               KÜÇÜK DOLAŞIM: sağ karıncık → akciğer → sol kulakçık
             </Etiket>
           )}
@@ -221,7 +221,7 @@ function KalpSahne({ adim }: SahneProps) {
             </Etiket>
           )}
           {uzunluk > 0 && adim >= 4 && (
-            <Etiket konum={[0, -3.2, 0]} renk="#94a3b8" kucuk>
+            <Etiket konum={[0, -3.2, 0]} renk="#6b7280" kucuk>
               sol karıncık duvarı daha kalın: kanı tüm vücuda pompalar
             </Etiket>
           )}

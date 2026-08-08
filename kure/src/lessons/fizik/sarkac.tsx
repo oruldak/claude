@@ -13,7 +13,7 @@ function Cubuk({ x, deger, enBuyuk, renk, ad }: { x: number; deger: number; enBu
     <group position={[x, -2.6, 0]}>
       <mesh position={[0, h / 2, 0]}>
         <boxGeometry args={[0.5, h, 0.5]} />
-        <meshStandardMaterial color={renk} emissive={renk} emissiveIntensity={0.25} roughness={0.4} />
+        <meshStandardMaterial color={renk} roughness={0.4} />
       </mesh>
       <Etiket konum={[0, -0.42, 0]} renk={renk} kucuk>
         {ad}
@@ -65,20 +65,20 @@ function SarkacSahne({ adim }: SahneProps) {
         <Gosterge
           satirlar={[
             { ad: 'uzunluk L', deger: `${L.toFixed(2)} m` },
-            { ad: 'genlik θ₀', deger: `${th0.toFixed(0)}°`, renk: '#ffb454' },
-            { ad: 'periyot T', deger: `${T.toFixed(3)} s`, renk: '#38e1c6' },
-            { ad: 'T₀ = 2π√(L/g)', deger: `${T0.toFixed(3)} s`, renk: '#8b7dff' },
+            { ad: 'genlik θ₀', deger: `${th0.toFixed(0)}°`, renk: '#b45309' },
+            { ad: 'periyot T', deger: `${T.toFixed(3)} s`, renk: '#0f766e' },
+            { ad: 'T₀ = 2π√(L/g)', deger: `${T0.toFixed(3)} s`, renk: '#4338ca' },
             { ad: 'hız v', deger: `${v.toFixed(2)} m/s` },
-            { ad: 'Eₖ + Eₚ', deger: `${(Ek + Ep).toFixed(3)} J`, renk: '#4ade80' },
+            { ad: 'Eₖ + Eₚ', deger: `${(Ek + Ep).toFixed(3)} J`, renk: '#15803d' },
           ]}
         />
       }
       kontrol={
         <>
           <Kaydirac etiket="L (m)" deger={L} min={0.8} max={3.4} onChange={setL} basamak={2} />
-          <Kaydirac etiket="θ₀" deger={th0} min={5} max={80} adim={1} basamak={0} onChange={setTh0} birim="°" renk="#ffb454" />
-          <Kaydirac etiket="kütle m (kg)" deger={m} min={0.2} max={5} onChange={setM} basamak={1} renk="#f472b6" />
-          <Kaydirac etiket="g (m/s²)" deger={g} min={1.6} max={25} onChange={setG} basamak={2} renk="#8b7dff" />
+          <Kaydirac etiket="θ₀" deger={th0} min={5} max={80} adim={1} basamak={0} onChange={setTh0} birim="°" renk="#b45309" />
+          <Kaydirac etiket="kütle m (kg)" deger={m} min={0.2} max={5} onChange={setM} basamak={1} renk="#be185d" />
+          <Kaydirac etiket="g (m/s²)" deger={g} min={1.6} max={25} onChange={setG} basamak={2} renk="#4338ca" />
           <Anahtar etiket="ikinci sarkaç (farklı kütle)" deger={ikinci} onChange={setIkinci} />
           <Dugme onClick={() => setOynat(!oynat)} aktif={oynat} boyut="sm">
             {oynat ? '⏸ durdur' : '▶ oynat'}
@@ -86,36 +86,42 @@ function SarkacSahne({ adim }: SahneProps) {
         </>
       }
       sahne={
-        <Sahne kamera={[0.5, 1.2, 10]} izgara={false} maxUzaklik={30} zeminY={-3}>
-          {/* Tavan */}
-          <mesh position={[1.3, PIVOT_Y + 0.2, 0]}>
-            <boxGeometry args={[6.4, 0.25, 1.2]} />
-            <meshStandardMaterial color="#1a2542" roughness={0.7} />
+        <Sahne kamera={[1.5, 1.0, 10]} zemin="ahsap" zeminY={-3.15} maxUzaklik={30}>
+          {/* Askı kirişi ve ayakları */}
+          <mesh position={[1.3, PIVOT_Y + 0.22, 0]} castShadow receiveShadow>
+            <boxGeometry args={[6.6, 0.28, 0.6]} />
+            <meshStandardMaterial color="#6b4b2f" roughness={0.75} metalness={0.05} />
           </mesh>
+          {[-1.7, 4.2].map((x) => (
+            <mesh key={x} position={[x, (PIVOT_Y - 3.05) / 2 + 0.05, 0]} castShadow>
+              <boxGeometry args={[0.22, PIVOT_Y + 3.05, 0.22]} />
+              <meshStandardMaterial color="#7a5636" roughness={0.8} />
+            </mesh>
+          ))}
 
           {/* Denge doğrultusu ve yay */}
-          <Line points={[[0, PIVOT_Y, 0], [0, PIVOT_Y - L - 0.4, 0]] as V3[]} color="#334867" lineWidth={1.4} dashed dashSize={0.14} gapSize={0.1} />
-          <Line points={yay} color="#26324f" lineWidth={2} />
+          <Line points={[[0, PIVOT_Y, 0], [0, PIVOT_Y - L - 0.4, 0]] as V3[]} color="#c9c0b1" lineWidth={1.4} dashed dashSize={0.14} gapSize={0.1} />
+          <Line points={yay} color="#d8cfc0" lineWidth={2} />
 
           {/* İp ve top */}
-          <Line points={[[0, PIVOT_Y, 0], P]} color="#94a3b8" lineWidth={2.4} />
-          <mesh position={P}>
-            <sphereGeometry args={[0.14 + m * 0.045, 24, 24]} />
-            <meshStandardMaterial color="#ffb454" emissive="#ffb454" emissiveIntensity={0.3} roughness={0.35} />
+          <Line points={[[0, PIVOT_Y, 0], P]} color="#6b7280" lineWidth={2.4} />
+          <mesh position={P} castShadow>
+            <sphereGeometry args={[0.14 + m * 0.045, 40, 28]} />
+            <meshStandardMaterial color="#b9bdc6" roughness={0.16} metalness={0.95} />
           </mesh>
-          <Etiket konum={[0.55, PIVOT_Y - 0.35, 0]} renk="#8b7dff" kucuk>
+          <Etiket konum={[0.55, PIVOT_Y - 0.35, 0]} renk="#4338ca" kucuk>
             θ = {((th * 180) / Math.PI).toFixed(1)}°
           </Etiket>
 
           {/* İkinci sarkaç */}
           {(ikinci || adim === 3) && (
             <>
-              <Line points={[[2.6, PIVOT_Y, 0], P2]} color="#64748b" lineWidth={2.2} />
-              <mesh position={P2}>
-                <sphereGeometry args={[0.34, 24, 24]} />
-                <meshStandardMaterial color="#f472b6" emissive="#f472b6" emissiveIntensity={0.25} roughness={0.4} />
+              <Line points={[[2.6, PIVOT_Y, 0], P2]} color="#8a8f9c" lineWidth={2.2} />
+              <mesh position={P2} castShadow>
+                <sphereGeometry args={[0.34, 40, 28]} />
+                <meshStandardMaterial color="#c4708f" roughness={0.22} metalness={0.7} />
               </mesh>
-              <Etiket konum={[2.6, PIVOT_Y - L - 0.7, 0]} renk="#f472b6" kucuk>
+              <Etiket konum={[2.6, PIVOT_Y - L - 0.7, 0]} renk="#be185d" kucuk>
                 4 kat kütle — aynı periyot
               </Etiket>
             </>
@@ -124,26 +130,26 @@ function SarkacSahne({ adim }: SahneProps) {
           {/* Kuvvet bileşenleri */}
           {adim >= 1 && (
             <>
-              <Ok baslangic={P} bitis={[P[0], P[1] - 1.3, 0]} renk="#f472b6" kalinlik={0.038} />
-              <Etiket konum={[P[0] + 0.42, P[1] - 1.35, 0]} renk="#f472b6" kucuk>
+              <Ok baslangic={P} bitis={[P[0], P[1] - 1.3, 0]} renk="#be185d" kalinlik={0.038} />
+              <Etiket konum={[P[0] + 0.42, P[1] - 1.35, 0]} renk="#be185d" kucuk>
                 G = mg
               </Etiket>
               {/* İp doğrultusundaki bileşen (mg cosθ) ve dik bileşen (mg sinθ) */}
               <Ok
                 baslangic={P}
                 bitis={[P[0] + 1.3 * Math.sin(th) * Math.cos(th), P[1] - 1.3 * Math.cos(th) * Math.cos(th), 0]}
-                renk="#94a3b8"
+                renk="#6b7280"
                 kalinlik={0.03}
                 baslikBoyu={0.2}
               />
               <Ok
                 baslangic={P}
                 bitis={[P[0] - 1.3 * Math.cos(th) * Math.sin(th), P[1] - 1.3 * Math.sin(th) * Math.sin(th), 0]}
-                renk="#38e1c6"
+                renk="#0f766e"
                 kalinlik={0.03}
                 baslikBoyu={0.2}
               />
-              <Etiket konum={[P[0] - 1.5 * Math.cos(th) * Math.sin(th), P[1] - 1.5 * Math.sin(th) * Math.sin(th) + 0.2, 0]} renk="#38e1c6" kucuk>
+              <Etiket konum={[P[0] - 1.5 * Math.cos(th) * Math.sin(th), P[1] - 1.5 * Math.sin(th) * Math.sin(th) + 0.2, 0]} renk="#0f766e" kucuk>
                 mg·sinθ (geri çağırıcı)
               </Etiket>
             </>
@@ -152,10 +158,10 @@ function SarkacSahne({ adim }: SahneProps) {
           {/* Enerji çubukları */}
           {adim >= 2 && (
             <>
-              <Cubuk x={-4.2} deger={Ep} enBuyuk={Etop} renk="#8b7dff" ad="Eₚ" />
-              <Cubuk x={-3.3} deger={Ek} enBuyuk={Etop} renk="#ffb454" ad="Eₖ" />
-              <Cubuk x={-2.4} deger={Ek + Ep} enBuyuk={Etop} renk="#4ade80" ad="toplam" />
-              <Etiket konum={[-3.3, 1.1, 0]} renk="#4ade80" kucuk>
+              <Cubuk x={-4.2} deger={Ep} enBuyuk={Etop} renk="#4338ca" ad="Eₚ" />
+              <Cubuk x={-3.3} deger={Ek} enBuyuk={Etop} renk="#b45309" ad="Eₖ" />
+              <Cubuk x={-2.4} deger={Ek + Ep} enBuyuk={Etop} renk="#15803d" ad="toplam" />
+              <Etiket konum={[-3.3, 1.1, 0]} renk="#15803d" kucuk>
                 toplam enerji sabit
               </Etiket>
             </>

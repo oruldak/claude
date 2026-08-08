@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import * as THREE from 'three'
-import { Cizgi as Line, Etiket, Sahne, type V3 } from '../shared/sahne'
+import { Cizgi as Line, Etiket, KareliKagit, Sahne, type V3 } from '../shared/sahne'
 import { Dugme, Duzen, Gosterge, Kaydirac } from '../shared/ui'
 import { useGecis } from '../shared/animasyon'
 import type { DersModulu, SahneProps } from '../types'
@@ -116,9 +116,9 @@ function PisagorSahne({ adim }: SahneProps) {
       gosterge={
         <Gosterge
           satirlar={[
-            { ad: 'a', deger: a.toFixed(1), renk: '#38e1c6' },
-            { ad: 'b', deger: b.toFixed(1), renk: '#ffb454' },
-            { ad: 'c = √(a²+b²)', deger: c.toFixed(3), renk: '#f472b6' },
+            { ad: 'a', deger: a.toFixed(1), renk: '#0f766e' },
+            { ad: 'b', deger: b.toFixed(1), renk: '#b45309' },
+            { ad: 'c = √(a²+b²)', deger: c.toFixed(3), renk: '#be185d' },
             { ad: 'a² + b²', deger: (a * a + b * b).toFixed(2) },
             { ad: 'c²', deger: (c * c).toFixed(2) },
           ]}
@@ -127,7 +127,7 @@ function PisagorSahne({ adim }: SahneProps) {
       kontrol={
         <>
           <Kaydirac etiket="a" deger={a} min={1.5} max={5} onChange={setA} basamak={1} />
-          <Kaydirac etiket="b" deger={b} min={1.5} max={5} onChange={setB} basamak={1} renk="#ffb454" />
+          <Kaydirac etiket="b" deger={b} min={1.5} max={5} onChange={setB} basamak={1} renk="#b45309" />
           {adim >= 3 && (
             <>
               <Dugme onClick={() => setOtomatik(!otomatik)} aktif={otomatik} boyut="sm">
@@ -140,7 +140,7 @@ function PisagorSahne({ adim }: SahneProps) {
                   min={0}
                   max={1}
                   onChange={setElleGecis}
-                  renk="#f472b6"
+                  renk="#be185d"
                 />
               )}
             </>
@@ -148,31 +148,32 @@ function PisagorSahne({ adim }: SahneProps) {
         </>
       }
       sahne={
-        <Sahne kamera={[0, 0.6, 11]} izgara={false} maxUzaklik={28}>
+        <Sahne kamera={[0, 0.6, 11]} zemin="yok" maxUzaklik={28}>
+          <KareliKagit genislik={15} yukseklik={10} z={-0.2} />
           {adim <= 1 ? (
             <>
-              <Levha noktalar={ucgen1} renk="#e6ecf7" opaklik={0.28} />
-              <Etiket konum={[...M([a / 2, -0.3]), 0.3] as V3} renk="#38e1c6" kucuk>
+              <Levha noktalar={ucgen1} renk="#191d24" opaklik={0.28} />
+              <Etiket konum={[...M([a / 2, -0.3]), 0.3] as V3} renk="#0f766e" kucuk>
                 a = {a.toFixed(1)}
               </Etiket>
-              <Etiket konum={[...M([-0.35, b / 2]), 0.3] as V3} renk="#ffb454" kucuk>
+              <Etiket konum={[...M([-0.35, b / 2]), 0.3] as V3} renk="#b45309" kucuk>
                 b = {b.toFixed(1)}
               </Etiket>
-              <Etiket konum={[...M([a / 2 + 0.35, b / 2 + 0.35]), 0.3] as V3} renk="#f472b6" kucuk>
+              <Etiket konum={[...M([a / 2 + 0.35, b / 2 + 0.35]), 0.3] as V3} renk="#be185d" kucuk>
                 c = {c.toFixed(2)}
               </Etiket>
               {adim === 1 && (
                 <>
-                  <Levha noktalar={kareLegA} renk="#38e1c6" opaklik={0.42} />
-                  <Levha noktalar={kareLegB} renk="#ffb454" opaklik={0.42} />
-                  <Levha noktalar={kareHip} renk="#f472b6" opaklik={0.42} />
-                  <Etiket konum={[...M([a / 2, -a / 2]), 0.3] as V3} renk="#38e1c6">
+                  <Levha noktalar={kareLegA} renk="#0f766e" opaklik={0.42} />
+                  <Levha noktalar={kareLegB} renk="#b45309" opaklik={0.42} />
+                  <Levha noktalar={kareHip} renk="#be185d" opaklik={0.42} />
+                  <Etiket konum={[...M([a / 2, -a / 2]), 0.3] as V3} renk="#0f766e">
                     a² = {(a * a).toFixed(1)}
                   </Etiket>
-                  <Etiket konum={[...M([-b / 2, b / 2]), 0.3] as V3} renk="#ffb454">
+                  <Etiket konum={[...M([-b / 2, b / 2]), 0.3] as V3} renk="#b45309">
                     b² = {(b * b).toFixed(1)}
                   </Etiket>
-                  <Etiket konum={[...M([a / 2 + b / 2, b / 2 + a / 2]), 0.3] as V3} renk="#f472b6">
+                  <Etiket konum={[...M([a / 2 + b / 2, b / 2 + a / 2]), 0.3] as V3} renk="#be185d">
                     c² = {(c * c).toFixed(1)}
                   </Etiket>
                 </>
@@ -181,35 +182,35 @@ function PisagorSahne({ adim }: SahneProps) {
           ) : (
             <>
               {/* Sabit büyük kare: (a+b)² */}
-              <Line points={buyukKare} color="#5b6b8c" lineWidth={2.4} />
-              <Etiket konum={[0, (s / 2 + 0.45 - s / 2) * k + 3.4, 0]} renk="#94a3b8" kucuk>
+              <Line points={buyukKare} color="#8b8577" lineWidth={2.4} />
+              <Etiket konum={[0, (s / 2 + 0.45 - s / 2) * k + 3.4, 0]} renk="#6b7280" kucuk>
                 büyük karenin alanı = (a + b)² — iki düzende de aynı
               </Etiket>
 
               {/* Kalan bölgeler */}
-              <Levha noktalar={kareA} renk="#38e1c6" opaklik={0.5 * (1 - g)} cerceve={g < 0.5} />
-              <Levha noktalar={kareB} renk="#ffb454" opaklik={0.5 * (1 - g)} cerceve={g < 0.5} />
-              <Levha noktalar={kareC} renk="#f472b6" opaklik={0.5 * g} cerceve={g > 0.5} />
+              <Levha noktalar={kareA} renk="#0f766e" opaklik={0.5 * (1 - g)} cerceve={g < 0.5} />
+              <Levha noktalar={kareB} renk="#b45309" opaklik={0.5 * (1 - g)} cerceve={g < 0.5} />
+              <Levha noktalar={kareC} renk="#be185d" opaklik={0.5 * g} cerceve={g > 0.5} />
 
               {g < 0.5 && (
                 <>
-                  <Etiket konum={[...T([a / 2, a / 2]), 0.3] as V3} renk="#38e1c6">
+                  <Etiket konum={[...T([a / 2, a / 2]), 0.3] as V3} renk="#0f766e">
                     a²
                   </Etiket>
-                  <Etiket konum={[...T([(a + s) / 2, (a + s) / 2]), 0.3] as V3} renk="#ffb454">
+                  <Etiket konum={[...T([(a + s) / 2, (a + s) / 2]), 0.3] as V3} renk="#b45309">
                     b²
                   </Etiket>
                 </>
               )}
               {g > 0.5 && (
-                <Etiket konum={[...T([s / 2, s / 2]), 0.3] as V3} renk="#f472b6">
+                <Etiket konum={[...T([s / 2, s / 2]), 0.3] as V3} renk="#be185d">
                   c²
                 </Etiket>
               )}
 
               {/* Dört eş üçgen */}
               {ucgenler.map((u, i) => (
-                <Levha key={i} noktalar={u} renk="#93a4c4" opaklik={0.6} derinlik={0.2} z={0.02} />
+                <Levha key={i} noktalar={u} renk="#a8a396" opaklik={0.6} derinlik={0.2} z={0.02} />
               ))}
             </>
           )}

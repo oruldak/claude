@@ -12,9 +12,9 @@ export function KademeSayfasi() {
   return (
     <div className="space-y-6">
       <header>
-        <p className="text-xs uppercase tracking-[0.2em] text-camgobegi">Kademe</p>
-        <h1 className="text-2xl font-bold text-white">{KADEME_ADI[k]}</h1>
-        <p className="mt-1 text-sm text-slate-400">
+        <p className="etiket-kucuk text-murekkep-3">Kademe</p>
+        <h1 className="mt-1 text-[30px] font-bold tracking-tight">{KADEME_ADI[k]}</h1>
+        <p className="okuma mt-1">
           {KADEME_SINIFLARI[k].join('., ')}. sınıflar · {dersler.length} ders
         </p>
       </header>
@@ -23,23 +23,21 @@ export function KademeSayfasi() {
         {dersler.map((d) => {
           const siniflar = dersSiniflari(d, k)
           return (
-            <section key={d.kod} className="kart p-5">
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div className="flex items-start gap-3">
-                  <span
-                    className="grid h-11 w-11 shrink-0 place-items-center rounded-xl text-xl"
-                    style={{ background: `${d.renk}1a`, color: d.renk }}
-                  >
-                    {d.ikon}
-                  </span>
-                  <div>
-                    <h2 className="text-base font-semibold text-white">{d.ad}</h2>
-                    <p className="mt-0.5 max-w-2xl text-[13px] leading-relaxed text-slate-400">{d.ozet}</p>
-                  </div>
+            <section key={d.kod} className="kart overflow-hidden">
+              <div className="flex items-start gap-4 border-b border-cizgi px-5 py-4">
+                <span
+                  className="grid h-12 w-12 shrink-0 place-items-center rounded-xl text-[22px]"
+                  style={{ background: `${d.renk}12`, color: d.renk }}
+                >
+                  {d.ikon}
+                </span>
+                <div className="min-w-0">
+                  <h2 className="text-[17px] font-bold">{d.ad}</h2>
+                  <p className="okuma mt-0.5 max-w-3xl text-[13.5px]">{d.ozet}</p>
                 </div>
               </div>
 
-              <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="grid gap-2 p-4 sm:grid-cols-2 lg:grid-cols-4">
                 {siniflar.map((s) => {
                   const sp = sinifProgrami(d, s)
                   const konuSayisi = sp?.uniteler.reduce((a, u) => a + u.konular.length, 0) ?? 0
@@ -52,15 +50,15 @@ export function KademeSayfasi() {
                     <Link
                       key={s}
                       to={`/ders/${d.kod}/${s}`}
-                      className="rounded-xl border border-gece-500/50 bg-gece-900/50 px-4 py-3 transition hover:border-camgobegi/50"
+                      className="kart kart-tik hover:kart-tik-hover px-4 py-3"
                     >
-                      <p className="text-sm font-semibold text-white">{s}. Sınıf</p>
-                      <p className="mt-0.5 text-[11px] text-slate-500">
+                      <p className="text-[15px] font-bold">{s}. Sınıf</p>
+                      <p className="mt-0.5 text-[11.5px] text-murekkep-3">
                         {sp?.uniteler.length ?? 0} ünite · {konuSayisi} konu
                       </p>
                       {modulSayisi > 0 && (
-                        <p className="mt-1 text-[11px] font-medium" style={{ color: d.renk }}>
-                          {modulSayisi} adet 3B modül
+                        <p className="mt-1.5 text-[11.5px] font-semibold" style={{ color: d.renk }}>
+                          {modulSayisi} konuda 3B ders
                         </p>
                       )}
                     </Link>

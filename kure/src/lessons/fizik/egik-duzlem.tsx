@@ -59,35 +59,35 @@ function EgikDuzlemSahne({ adim }: SahneProps) {
         <Gosterge
           satirlar={[
             { ad: 'eğim açısı α', deger: `${aciD.toFixed(0)}°` },
-            { ad: 'G = mg', deger: `${G.toFixed(1)} N`, renk: '#f472b6' },
-            { ad: 'G·sinα (yamaç)', deger: `${Gpar.toFixed(1)} N`, renk: '#38e1c6' },
-            { ad: 'N = G·cosα', deger: `${N.toFixed(1)} N`, renk: '#7dd3fc' },
-            { ad: 'sürtünme f', deger: `${f.toFixed(1)} N`, renk: '#ffb454' },
-            { ad: 'ivme a', deger: `${a.toFixed(2)} m/s²`, renk: hareket ? '#4ade80' : '#94a3b8' },
-            { ad: 'kritik açı', deger: `${kritikAci.toFixed(1)}°`, renk: '#8b7dff' },
+            { ad: 'G = mg', deger: `${G.toFixed(1)} N`, renk: '#be185d' },
+            { ad: 'G·sinα (yamaç)', deger: `${Gpar.toFixed(1)} N`, renk: '#0f766e' },
+            { ad: 'N = G·cosα', deger: `${N.toFixed(1)} N`, renk: '#0369a1' },
+            { ad: 'sürtünme f', deger: `${f.toFixed(1)} N`, renk: '#b45309' },
+            { ad: 'ivme a', deger: `${a.toFixed(2)} m/s²`, renk: hareket ? '#15803d' : '#6b7280' },
+            { ad: 'kritik açı', deger: `${kritikAci.toFixed(1)}°`, renk: '#4338ca' },
           ]}
         />
       }
       kontrol={
         <>
           <Kaydirac etiket="eğim α" deger={aciD} min={5} max={60} adim={1} basamak={0} onChange={setAciD} birim="°" />
-          <Kaydirac etiket="sürtünme κ (μ)" deger={mu} min={0} max={1} onChange={setMu} basamak={2} renk="#ffb454" />
-          <Kaydirac etiket="kütle m (kg)" deger={m} min={0.5} max={8} onChange={setM} basamak={1} renk="#f472b6" />
+          <Kaydirac etiket="sürtünme κ (μ)" deger={mu} min={0} max={1} onChange={setMu} basamak={2} renk="#b45309" />
+          <Kaydirac etiket="kütle m (kg)" deger={m} min={0.5} max={8} onChange={setM} basamak={1} renk="#be185d" />
           <Anahtar etiket="ağırlığın bileşenleri" deger={bilesenler} onChange={setBilesenler} />
           <Dugme onClick={() => setOynat(!oynat)} aktif={oynat} boyut="sm">
             {oynat ? '⏸ durdur' : '▶ oynat'}
           </Dugme>
-          <span className="text-xs" style={{ color: hareket ? '#4ade80' : '#94a3b8' }}>
+          <span className="text-xs" style={{ color: hareket ? '#15803d' : '#6b7280' }}>
             {hareket ? 'cisim kayıyor (G·sinα > f_max)' : 'cisim dengede (G·sinα ≤ f_max)'}
           </span>
         </>
       }
       sahne={
-        <Sahne kamera={[0.5, 2.6, 11]} izgara maxUzaklik={32}>
+        <Sahne kamera={[2.5, 2.8, 11]} zemin="ahsap" maxUzaklik={32}>
           {/* Eğik düzlem */}
           <group position={[0, 0, -0.8]}>
-            <mesh geometry={kama}>
-              <meshStandardMaterial color="#1a2542" roughness={0.75} side={THREE.DoubleSide} />
+            <mesh geometry={kama} castShadow receiveShadow>
+              <meshStandardMaterial color="#8a6440" roughness={0.72} metalness={0.04} side={THREE.DoubleSide} />
             </mesh>
           </group>
           <Line
@@ -95,7 +95,7 @@ function EgikDuzlemSahne({ adim }: SahneProps) {
               [-TABAN / 2, H, 0.85],
               [TABAN / 2, 0, 0.85],
             ]}
-            color="#38e1c6"
+            color="#0f766e"
             lineWidth={2.4}
           />
           <Line
@@ -105,42 +105,42 @@ function EgikDuzlemSahne({ adim }: SahneProps) {
               [-TABAN / 2, H, 0.85],
               [-TABAN / 2, 0, 0.85],
             ]}
-            color="#334867"
+            color="#c9c0b1"
             lineWidth={1.6}
           />
-          <Etiket konum={[TABAN / 2 - 1.1, 0.28, 0.85]} renk="#94a3b8" kucuk>
+          <Etiket konum={[TABAN / 2 - 1.1, 0.28, 0.85]} renk="#6b7280" kucuk>
             α = {aciD.toFixed(0)}°
           </Etiket>
-          <Etiket konum={[-TABAN / 2 - 0.55, H / 2, 0.85]} renk="#94a3b8" kucuk>
+          <Etiket konum={[-TABAN / 2 - 0.55, H / 2, 0.85]} renk="#6b7280" kucuk>
             h = {H.toFixed(2)} m
           </Etiket>
-          <Etiket konum={[0, -0.5, 0.85]} renk="#94a3b8" kucuk>
+          <Etiket konum={[0, -0.5, 0.85]} renk="#6b7280" kucuk>
             taban = {TABAN} m
           </Etiket>
 
           {/* Blok */}
           <group position={merkez} rotation={[0, 0, -al]}>
-            <mesh>
+            <mesh castShadow receiveShadow>
               <boxGeometry args={[0.85, 0.6, 0.85]} />
-              <meshStandardMaterial color="#ffb454" roughness={0.5} metalness={0.1} />
+              <meshStandardMaterial color="#a8452a" roughness={0.68} metalness={0.05} />
             </mesh>
           </group>
 
           {/* Ağırlık */}
-          <Ok baslangic={merkez} bitis={V(0, -G * k)} renk="#f472b6" kalinlik={0.042} />
-          <Etiket konum={V(0.45, -G * k - 0.15)} renk="#f472b6" kucuk>
+          <Ok baslangic={merkez} bitis={V(0, -G * k)} renk="#be185d" kalinlik={0.042} />
+          <Etiket konum={V(0.45, -G * k - 0.15)} renk="#be185d" kucuk>
             G = mg
           </Etiket>
 
           {/* Bileşenler */}
           {adim >= 1 && bilesenler && (
             <>
-              <Ok baslangic={merkez} bitis={V(yon[0] * Gpar * k, yon[1] * Gpar * k)} renk="#38e1c6" kalinlik={0.032} baslikBoyu={0.22} />
-              <Ok baslangic={merkez} bitis={V(-nor[0] * Gdik * k, -nor[1] * Gdik * k)} renk="#7dd3fc" kalinlik={0.032} baslikBoyu={0.22} />
-              <Etiket konum={V(yon[0] * Gpar * k + 0.3, yon[1] * Gpar * k - 0.25)} renk="#38e1c6" kucuk>
+              <Ok baslangic={merkez} bitis={V(yon[0] * Gpar * k, yon[1] * Gpar * k)} renk="#0f766e" kalinlik={0.032} baslikBoyu={0.22} />
+              <Ok baslangic={merkez} bitis={V(-nor[0] * Gdik * k, -nor[1] * Gdik * k)} renk="#0369a1" kalinlik={0.032} baslikBoyu={0.22} />
+              <Etiket konum={V(yon[0] * Gpar * k + 0.3, yon[1] * Gpar * k - 0.25)} renk="#0f766e" kucuk>
                 G·sinα
               </Etiket>
-              <Etiket konum={V(-nor[0] * Gdik * k - 0.35, -nor[1] * Gdik * k - 0.2)} renk="#7dd3fc" kucuk>
+              <Etiket konum={V(-nor[0] * Gdik * k - 0.35, -nor[1] * Gdik * k - 0.2)} renk="#0369a1" kucuk>
                 G·cosα
               </Etiket>
             </>
@@ -149,19 +149,19 @@ function EgikDuzlemSahne({ adim }: SahneProps) {
           {/* Normal ve sürtünme */}
           {adim >= 2 && (
             <>
-              <Ok baslangic={merkez} bitis={V(nor[0] * N * k, nor[1] * N * k)} renk="#7dd3fc" kalinlik={0.036} />
-              <Etiket konum={V(nor[0] * N * k + 0.32, nor[1] * N * k + 0.2)} renk="#7dd3fc" kucuk>
+              <Ok baslangic={merkez} bitis={V(nor[0] * N * k, nor[1] * N * k)} renk="#0369a1" kalinlik={0.036} />
+              <Etiket konum={V(nor[0] * N * k + 0.32, nor[1] * N * k + 0.2)} renk="#0369a1" kucuk>
                 N
               </Etiket>
-              <Ok baslangic={merkez} bitis={V(-yon[0] * f * k, -yon[1] * f * k)} renk="#ffb454" kalinlik={0.036} />
-              <Etiket konum={V(-yon[0] * f * k - 0.35, -yon[1] * f * k + 0.3)} renk="#ffb454" kucuk>
+              <Ok baslangic={merkez} bitis={V(-yon[0] * f * k, -yon[1] * f * k)} renk="#b45309" kalinlik={0.036} />
+              <Etiket konum={V(-yon[0] * f * k - 0.35, -yon[1] * f * k + 0.3)} renk="#b45309" kucuk>
                 f = μN
               </Etiket>
             </>
           )}
 
           {adim >= 3 && (
-            <Etiket konum={[0, H + 0.9, 0.85]} renk={hareket ? '#4ade80' : '#94a3b8'}>
+            <Etiket konum={[0, H + 0.9, 0.85]} renk={hareket ? '#15803d' : '#6b7280'}>
               {hareket
                 ? `kayma başladı:  tanα = ${Math.tan(al).toFixed(2)} > μ = ${mu.toFixed(2)}`
                 : `denge:  tanα = ${Math.tan(al).toFixed(2)} ≤ μ = ${mu.toFixed(2)}`}
@@ -169,7 +169,7 @@ function EgikDuzlemSahne({ adim }: SahneProps) {
           )}
 
           {adim >= 4 && (
-            <Etiket konum={[0, H + 1.6, 0.85]} renk="#8b7dff" kucuk>
+            <Etiket konum={[0, H + 1.6, 0.85]} renk="#4338ca" kucuk>
               basit makine: kuvvet kazancı = L / h = 1 / sinα = {(1 / Math.sin(al)).toFixed(2)}
             </Etiket>
           )}

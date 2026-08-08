@@ -31,6 +31,8 @@ const sayfalar = [
   ['iskelet', '/#/modul/iskelet'],
   ['gunes', '/#/modul/gunes-sistemi'],
   ['mevsimler', '/#/modul/mevsimler'],
+  ['odevler', '/#/odevler'],
+  ['odev', '/#/odev/od-fen-8-1'],
   ['panel', '/#/panel'],
 ]
 

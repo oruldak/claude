@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Cizgi as Line, Egri, Eksenler, Etiket, Nokta, Sahne, type V3 } from '../shared/sahne'
+import { Cizgi as Line, Egri, Eksenler, Etiket, KareliKagit, Nokta, Sahne, type V3 } from '../shared/sahne'
 import { Anahtar, Dugme, Duzen, Gosterge, Kaydirac } from '../shared/ui'
 import { dongusel, useGecis, useZaman } from '../shared/animasyon'
 import type { DersModulu, SahneProps } from '../types'
@@ -69,9 +69,9 @@ function IntegralSahne({ adim }: SahneProps) {
         <Gosterge
           satirlar={[
             { ad: 'n (dilim)', deger: nEt },
-            { ad: 'Riemann toplamı', deger: riemann.toFixed(4), renk: '#ffb454' },
-            { ad: 'kesin değer', deger: kesin.toFixed(4), renk: '#38e1c6' },
-            { ad: 'hata', deger: hata.toFixed(4), renk: hata < 0.01 ? '#4ade80' : '#f472b6' },
+            { ad: 'Riemann toplamı', deger: riemann.toFixed(4), renk: '#b45309' },
+            { ad: 'kesin değer', deger: kesin.toFixed(4), renk: '#0f766e' },
+            { ad: 'hata', deger: hata.toFixed(4), renk: hata < 0.01 ? '#15803d' : '#be185d' },
           ]}
         />
       }
@@ -86,12 +86,12 @@ function IntegralSahne({ adim }: SahneProps) {
           </div>
           <div className="flex gap-1.5">
             {(['sol', 'orta', 'sag'] as Yontem[]).map((y) => (
-              <Dugme key={y} onClick={() => setYontem(y)} aktif={y === yontem} boyut="sm" renk="#ffb454">
+              <Dugme key={y} onClick={() => setYontem(y)} aktif={y === yontem} boyut="sm" renk="#b45309">
                 {YONTEM_ADI[y]}
               </Dugme>
             ))}
           </div>
-          <Kaydirac etiket="n" deger={n} min={1} max={140} adim={1} basamak={0} onChange={setN} renk="#ffb454" />
+          <Kaydirac etiket="n" deger={n} min={1} max={140} adim={1} basamak={0} onChange={setN} renk="#b45309" />
           <Kaydirac etiket="a" deger={a} min={fn.altSinir} max={b - 0.5} onChange={setA} basamak={1} />
           <Kaydirac etiket="b" deger={b} min={a + 0.5} max={5} onChange={setB} basamak={1} />
           <Anahtar etiket="derinlik" deger={derinlik} onChange={setDerinlik} />
@@ -101,15 +101,16 @@ function IntegralSahne({ adim }: SahneProps) {
         </>
       }
       sahne={
-        <Sahne kamera={[5.6, 3.8, 9.8]} izgara={false} maxUzaklik={30}>
+        <Sahne kamera={[5.6, 3.8, 9.8]} zemin="yok" maxUzaklik={30}>
+          <KareliKagit genislik={10} yukseklik={10} />
           <Eksenler boy={5} eksiBoy={3.4} bolme={1} />
-          <Egri f={fn.f} x0={Math.max(fn.altSinir, -4)} x1={5} renk="#7dd3fc" kalinlik={3.4} sinirY={7} />
+          <Egri f={fn.f} x0={Math.max(fn.altSinir, -4)} x1={5} renk="#0369a1" kalinlik={3.4} sinirY={7} />
 
           {/* Sınırlar */}
-          <Line points={[[a, 0, 0], [a, fn.f(a), 0]] as V3[]} color="#94a3b8" lineWidth={2} />
-          <Line points={[[b, 0, 0], [b, fn.f(b), 0]] as V3[]} color="#94a3b8" lineWidth={2} />
-          <Etiket konum={[a, -0.45, 0]} renk="#94a3b8" kucuk>a</Etiket>
-          <Etiket konum={[b, -0.45, 0]} renk="#94a3b8" kucuk>b</Etiket>
+          <Line points={[[a, 0, 0], [a, fn.f(a), 0]] as V3[]} color="#6b7280" lineWidth={2} />
+          <Line points={[[b, 0, 0], [b, fn.f(b), 0]] as V3[]} color="#6b7280" lineWidth={2} />
+          <Etiket konum={[a, -0.45, 0]} renk="#6b7280" kucuk>a</Etiket>
+          <Etiket konum={[b, -0.45, 0]} renk="#6b7280" kucuk>b</Etiket>
 
           {/* Riemann dikdörtgenleri */}
           {adim >= 1 &&
@@ -117,17 +118,15 @@ function IntegralSahne({ adim }: SahneProps) {
               <mesh key={i} position={[d.x + dx / 2, d.y / 2, 0]}>
                 <boxGeometry args={[dx * 0.97, Math.max(Math.abs(d.y), 0.001), derin]} />
                 <meshStandardMaterial
-                  color="#ffb454"
+                  color="#b45309"
                   transparent
                   opacity={nEt > 60 ? 0.55 : 0.42}
-                  emissive="#ffb454"
-                  emissiveIntensity={0.14}
                 />
               </mesh>
             ))}
 
           {adim === 0 && (
-            <Etiket konum={[(a + b) / 2, fn.f((a + b) / 2) / 2, 0]} renk="#7dd3fc">
+            <Etiket konum={[(a + b) / 2, fn.f((a + b) / 2) / 2, 0]} renk="#0369a1">
               bu alan kaç?
             </Etiket>
           )}
@@ -135,17 +134,18 @@ function IntegralSahne({ adim }: SahneProps) {
           {/* Birikim fonksiyonu A(x) = ∫ₐˣ f(t)dt */}
           {adim >= 3 && (
             <group position={[0, 0, BIRIKIM_Z]}>
+              <KareliKagit genislik={10} yukseklik={10} />
               <Eksenler boy={5} eksiBoy={3.4} bolme={0} adlar={['', 'A(x)', '']} />
               <Egri
                 f={(x) => fn.F(x) - fn.F(a)}
                 x0={a}
                 x1={xSuper}
-                renk="#8b7dff"
+                renk="#4338ca"
                 kalinlik={3.2}
                 sinirY={9}
               />
-              <Nokta konum={[xSuper, fn.F(xSuper) - fn.F(a), 0]} renk="#8b7dff" r={0.11} />
-              <Etiket konum={[a + 0.1, 4.4, 0]} renk="#8b7dff" kucuk>
+              <Nokta konum={[xSuper, fn.F(xSuper) - fn.F(a), 0]} renk="#4338ca" r={0.11} />
+              <Etiket konum={[a + 0.1, 4.4, 0]} renk="#4338ca" kucuk>
                 A(x) = ∫ₐˣ f(t) dt
               </Etiket>
             </group>
@@ -154,26 +154,26 @@ function IntegralSahne({ adim }: SahneProps) {
           {/* Süpürülen üst sınır ve iki düzlem arası bağ */}
           {adim >= 3 && (
             <>
-              <Line points={[[xSuper, 0, 0], [xSuper, fn.f(xSuper), 0]] as V3[]} color="#8b7dff" lineWidth={2.4} />
+              <Line points={[[xSuper, 0, 0], [xSuper, fn.f(xSuper), 0]] as V3[]} color="#4338ca" lineWidth={2.4} />
               <Line
                 points={[
                   [xSuper, fn.f(xSuper), 0],
                   [xSuper, fn.F(xSuper) - fn.F(a), BIRIKIM_Z],
                 ]}
-                color="#8b7dff"
+                color="#4338ca"
                 lineWidth={1.3}
                 dashed
                 dashSize={0.16}
                 gapSize={0.12}
               />
-              <Etiket konum={[xSuper + 0.55, fn.f(xSuper) + 0.4, 0]} renk="#8b7dff" kucuk>
+              <Etiket konum={[xSuper + 0.55, fn.f(xSuper) + 0.4, 0]} renk="#4338ca" kucuk>
                 A′(x) = f(x)
               </Etiket>
             </>
           )}
 
           {adim >= 4 && (
-            <Etiket konum={[(a + b) / 2, -1.5, 0]} renk="#38e1c6">
+            <Etiket konum={[(a + b) / 2, -1.5, 0]} renk="#0f766e">
               ∫ₐᵇ f(x)dx = F(b) − F(a) = {kesin.toFixed(3)}
             </Etiket>
           )}

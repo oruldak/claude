@@ -7,11 +7,11 @@ import type { DersModulu, SahneProps } from '../types'
 const DIZI = 'ATGGCTTTACGCAAGTCCGATTGGCAA'
 const ESLER: Record<string, string> = { A: 'T', T: 'A', G: 'C', C: 'G' }
 const RENK: Record<string, string> = {
-  A: '#4ade80',
-  T: '#ffb454',
-  G: '#7dd3fc',
-  C: '#f472b6',
-  U: '#8b7dff',
+  A: '#15803d',
+  T: '#b45309',
+  G: '#0369a1',
+  C: '#be185d',
+  U: '#4338ca',
 }
 
 /* Standart genetik şifre (RNA kodonları → aminoasit kısaltmaları) */
@@ -78,14 +78,14 @@ function DnaSahne({ adim }: SahneProps) {
       gosterge={
         <Gosterge
           satirlar={[
-            { ad: 'kalıp zincir', deger: `5'-${kalip.slice(0, 9).join('')}…-3'`, renk: '#38e1c6' },
+            { ad: 'kalıp zincir', deger: `5'-${kalip.slice(0, 9).join('')}…-3'`, renk: '#0f766e' },
             { ad: 'baz çifti', deger: n },
-            { ad: 'eşleşme', deger: 'A=T (2 bağ) · G≡C (3 bağ)', renk: '#94a3b8' },
-            ...(adim >= 3 ? [{ ad: 'mRNA', deger: `${mRNA.slice(0, 9).join('')}…`, renk: '#8b7dff' }] : []),
+            { ad: 'eşleşme', deger: 'A=T (2 bağ) · G≡C (3 bağ)', renk: '#6b7280' },
+            ...(adim >= 3 ? [{ ad: 'mRNA', deger: `${mRNA.slice(0, 9).join('')}…`, renk: '#4338ca' }] : []),
             ...(adim >= 4
               ? [
-                  { ad: 'okunan kodon', deger: kodonlar[ribozom] ?? '—', renk: '#ffb454' },
-                  { ad: 'protein', deger: protein.join('-') || '—', renk: '#4ade80' },
+                  { ad: 'okunan kodon', deger: kodonlar[ribozom] ?? '—', renk: '#b45309' },
+                  { ad: 'protein', deger: protein.join('-') || '—', renk: '#15803d' },
                 ]
               : []),
           ]}
@@ -101,10 +101,10 @@ function DnaSahne({ adim }: SahneProps) {
         </>
       }
       sahne={
-        <Sahne kamera={[6, 1, 8]} izgara={false} maxUzaklik={34} otoDondur={adim === 0}>
+        <Sahne kamera={[6, 1, 8]} zemin="yok" maxUzaklik={34} otoDondur={adim === 0}>
           {/* Şeker-fosfat iskeletleri */}
-          <Line points={iskeletA} color="#38e1c6" lineWidth={4} />
-          <Line points={iskeletB} color="#ffb454" lineWidth={4} />
+          <Line points={iskeletA} color="#0f766e" lineWidth={4} />
+          <Line points={iskeletB} color="#b45309" lineWidth={4} />
 
           {/* Baz çiftleri */}
           {kalip.map((b, i) => {
@@ -117,16 +117,16 @@ function DnaSahne({ adim }: SahneProps) {
               <group key={i}>
                 <mesh position={[(pa[0] + orta[0]) / 2, (pa[1] + orta[1]) / 2, (pa[2] + orta[2]) / 2]}>
                   <sphereGeometry args={[0.17, 14, 14]} />
-                  <meshStandardMaterial color={RENK[b]} emissive={RENK[b]} emissiveIntensity={0.3} />
+                  <meshStandardMaterial color={RENK[b]} />
                 </mesh>
                 <mesh position={[(pb[0] + orta[0]) / 2, (pb[1] + orta[1]) / 2, (pb[2] + orta[2]) / 2]}>
                   <sphereGeometry args={[0.17, 14, 14]} />
-                  <meshStandardMaterial color={RENK[tamamlayici[i]]} emissive={RENK[tamamlayici[i]]} emissiveIntensity={0.3} />
+                  <meshStandardMaterial color={RENK[tamamlayici[i]]} />
                 </mesh>
                 {bagGoster && !kopuk && (
                   <Line
                     points={[pa, pb]}
-                    color={b === 'G' || b === 'C' ? '#e6ecf7' : '#64748b'}
+                    color={b === 'G' || b === 'C' ? '#191d24' : '#8a8f9c'}
                     lineWidth={b === 'G' || b === 'C' ? 2.2 : 1.4}
                     dashed
                     dashSize={0.09}
@@ -134,7 +134,7 @@ function DnaSahne({ adim }: SahneProps) {
                   />
                 )}
                 {adim === 1 && i === Math.floor(n / 2) && (
-                  <Etiket konum={[orta[0], orta[1] + 0.5, orta[2]]} renk="#e6ecf7" kucuk>
+                  <Etiket konum={[orta[0], orta[1] + 0.5, orta[2]]} renk="#191d24" kucuk>
                     {b}–{tamamlayici[i]} ({b === 'G' || b === 'C' ? '3' : '2'} hidrojen bağı)
                   </Etiket>
                 )}
@@ -156,7 +156,7 @@ function DnaSahne({ adim }: SahneProps) {
               )
             })}
           {adim === 2 && (
-            <Etiket konum={[0, (n * DY) / 2 + 0.8, 0]} renk="#4ade80" kucuk>
+            <Etiket konum={[0, (n * DY) / 2 + 0.8, 0]} renk="#15803d" kucuk>
               yarı korunumlu eşleme: her yeni DNA’nın bir zinciri eskidir
             </Etiket>
           )}
@@ -170,11 +170,11 @@ function DnaSahne({ adim }: SahneProps) {
                 return (
                   <mesh key={`m${i}`} position={[pa[0] + 1.5, pa[1], pa[2]]}>
                     <sphereGeometry args={[0.16, 14, 14]} />
-                    <meshStandardMaterial color={RENK[b]} emissive={RENK[b]} emissiveIntensity={0.5} />
+                    <meshStandardMaterial color={RENK[b]} />
                   </mesh>
                 )
               })}
-              <Etiket konum={[2.8, (n * DY) / 2 + 0.4, 0]} renk="#8b7dff" kucuk>
+              <Etiket konum={[2.8, (n * DY) / 2 + 0.4, 0]} renk="#4338ca" kucuk>
                 mRNA — T yerine U kullanılır
               </Etiket>
             </>
@@ -186,15 +186,15 @@ function DnaSahne({ adim }: SahneProps) {
               {mRNA.map((b, i) => (
                 <mesh key={`t${i}`} position={[0, i * 0.34 - (n * 0.34) / 2, 0]}>
                   <sphereGeometry args={[0.14, 12, 12]} />
-                  <meshStandardMaterial color={RENK[b]} emissive={RENK[b]} emissiveIntensity={0.4} />
+                  <meshStandardMaterial color={RENK[b]} />
                 </mesh>
               ))}
               {/* Ribozom */}
               <mesh position={[0, (ribozom * 3 + 1) * 0.34 - (n * 0.34) / 2, 0]}>
                 <sphereGeometry args={[0.62, 20, 20]} />
-                <meshStandardMaterial color="#94a3b8" transparent opacity={0.45} />
+                <meshStandardMaterial color="#6b7280" transparent opacity={0.45} />
               </mesh>
-              <Etiket konum={[1.3, (ribozom * 3 + 1) * 0.34 - (n * 0.34) / 2, 0]} renk="#ffb454" kucuk>
+              <Etiket konum={[1.3, (ribozom * 3 + 1) * 0.34 - (n * 0.34) / 2, 0]} renk="#b45309" kucuk>
                 kodon: {kodonlar[ribozom] ?? 'DUR'}
               </Etiket>
               {/* Büyüyen polipeptit */}
@@ -202,9 +202,9 @@ function DnaSahne({ adim }: SahneProps) {
                 <group key={`p${i}`}>
                   <mesh position={[-1.5, i * 0.55 - (n * 0.34) / 2, 0]}>
                     <sphereGeometry args={[0.22, 16, 16]} />
-                    <meshStandardMaterial color="#4ade80" roughness={0.4} />
+                    <meshStandardMaterial color="#15803d" roughness={0.4} />
                   </mesh>
-                  <Etiket konum={[-2.3, i * 0.55 - (n * 0.34) / 2, 0]} renk="#4ade80" kucuk>
+                  <Etiket konum={[-2.3, i * 0.55 - (n * 0.34) / 2, 0]} renk="#15803d" kucuk>
                     {aa}
                   </Etiket>
                 </group>

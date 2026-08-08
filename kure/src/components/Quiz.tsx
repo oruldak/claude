@@ -3,9 +3,11 @@ import type { Soru } from '../lessons/types'
 
 export function Quiz({
   sorular,
+  renk = '#0f766e',
   onBitti,
 }: {
   sorular: Soru[]
+  renk?: string
   onBitti?: (yuzde: number) => void
 }) {
   const [secim, setSecim] = useState<Record<number, number>>({})
@@ -13,15 +15,18 @@ export function Quiz({
 
   const dogruSayisi = sorular.reduce((s, q, i) => s + (secim[i] === q.dogru ? 1 : 0), 0)
   const yuzde = Math.round((dogruSayisi / sorular.length) * 100)
+  const eksik = sorular.length - Object.keys(secim).length
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {sorular.map((q, i) => {
         const s = secim[i]
         return (
-          <div key={i} className="kart p-4">
-            <p className="mb-3 text-sm font-medium text-slate-100">
-              <span className="mr-2 text-camgobegi">{i + 1}.</span>
+          <div key={i} className="kart px-5 py-4">
+            <p className="mb-3 text-[14.5px] font-medium leading-relaxed">
+              <span className="mr-1.5 font-bold" style={{ color: renk }}>
+                {i + 1}.
+              </span>
               {q.soru}
             </p>
             <div className="space-y-1.5">
@@ -35,17 +40,26 @@ export function Quiz({
                     type="button"
                     disabled={gonderildi}
                     onClick={() => setSecim((o) => ({ ...o, [i]: j }))}
-                    className={`flex w-full items-center gap-2.5 rounded-lg border px-3 py-2 text-left text-sm transition ${
-                      dogru
-                        ? 'border-emerald-400/60 bg-emerald-400/10 text-emerald-200'
+                    className="flex w-full items-center gap-3 rounded-xl border px-3 py-2 text-left text-[13.5px] transition"
+                    style={{
+                      borderColor: dogru ? '#15803d' : yanlis ? '#be185d' : secili ? renk : '#e4ddd1',
+                      background: dogru
+                        ? '#15803d10'
                         : yanlis
-                          ? 'border-rose-400/60 bg-rose-400/10 text-rose-200'
+                          ? '#be185d10'
                           : secili
-                            ? 'border-camgobegi/60 bg-camgobegi/10 text-slate-100'
-                            : 'border-gece-500/50 bg-gece-800/60 text-slate-300 hover:border-gece-500'
-                    }`}
+                            ? `${renk}0d`
+                            : '#fff',
+                      color: '#4a5260',
+                    }}
                   >
-                    <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full border border-current text-[10px]">
+                    <span
+                      className="grid h-5 w-5 shrink-0 place-items-center rounded-full border text-[10.5px] font-bold"
+                      style={{
+                        borderColor: dogru ? '#15803d' : yanlis ? '#be185d' : secili ? renk : '#d3c9b8',
+                        color: dogru ? '#15803d' : yanlis ? '#be185d' : secili ? renk : '#7d8696',
+                      }}
+                    >
                       {'ABCD'[j]}
                     </span>
                     {sec}
@@ -54,8 +68,8 @@ export function Quiz({
               })}
             </div>
             {gonderildi && (
-              <p className="mt-3 rounded-lg bg-gece-700/60 px-3 py-2 text-xs leading-relaxed text-slate-300">
-                <span className="font-semibold text-camgobegi">Açıklama: </span>
+              <p className="mt-3 rounded-xl bg-kagit-2/70 px-3.5 py-2.5 text-[12.5px] leading-relaxed text-murekkep-2">
+                <span className="font-semibold">Neden: </span>
                 {q.aciklama}
               </p>
             )}
@@ -66,24 +80,26 @@ export function Quiz({
       {!gonderildi ? (
         <button
           type="button"
-          disabled={Object.keys(secim).length < sorular.length}
+          disabled={eksik > 0}
           onClick={() => {
             setGonderildi(true)
             onBitti?.(yuzde)
           }}
-          className="w-full rounded-xl bg-camgobegi/90 px-4 py-2.5 text-sm font-semibold text-gece-900 transition hover:bg-camgobegi disabled:cursor-not-allowed disabled:bg-gece-600 disabled:text-slate-400"
+          className="w-full rounded-2xl px-4 py-3 text-[13.5px] font-semibold text-white transition disabled:cursor-not-allowed disabled:bg-cizgi-2"
+          style={eksik === 0 ? { background: renk } : undefined}
         >
-          {Object.keys(secim).length < sorular.length
-            ? `${sorular.length - Object.keys(secim).length} soru daha yanıtla`
-            : 'Cevapları kontrol et'}
+          {eksik > 0 ? `${eksik} soru daha yanıtla` : 'cevapları kontrol et'}
         </button>
       ) : (
-        <div className="kart flex items-center justify-between p-4">
+        <div className="kart flex items-center justify-between px-5 py-4">
           <div>
-            <p className="text-sm text-slate-300">
+            <p className="text-[12.5px] text-murekkep-3">
               {dogruSayisi} / {sorular.length} doğru
             </p>
-            <p className="text-2xl font-bold" style={{ color: yuzde >= 75 ? '#4ade80' : yuzde >= 50 ? '#ffb454' : '#f472b6' }}>
+            <p
+              className="text-[26px] font-bold leading-tight"
+              style={{ color: yuzde >= 75 ? '#15803d' : yuzde >= 50 ? '#b45309' : '#be185d' }}
+            >
               %{yuzde}
             </p>
           </div>
@@ -93,7 +109,7 @@ export function Quiz({
               setSecim({})
               setGonderildi(false)
             }}
-            className="rounded-lg border border-gece-500/60 px-3 py-1.5 text-xs text-slate-300 hover:border-camgobegi/60 hover:text-white"
+            className="rounded-xl border border-cizgi px-3.5 py-2 text-[12.5px] font-semibold text-murekkep-2 hover:border-murekkep-3"
           >
             tekrar dene
           </button>

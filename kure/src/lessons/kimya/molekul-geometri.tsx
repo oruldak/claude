@@ -10,7 +10,7 @@ const RENK: Record<string, string> = {
   N: '#4d7cff',
   O: '#ef4444',
   F: '#7ee787',
-  Cl: '#4ade80',
+  Cl: '#15803d',
   S: '#facc15',
   B: '#f9a8d4',
   P: '#fb923c',
@@ -176,14 +176,14 @@ function MolekulSahne({ adim }: SahneProps) {
       gosterge={
         <Gosterge
           satirlar={[
-            { ad: 'molekül', deger: `${M.formul} — ${M.ad}`, renk: '#38e1c6' },
+            { ad: 'molekül', deger: `${M.formul} — ${M.ad}`, renk: '#0f766e' },
             { ad: 'bağ sayısı', deger: M.bag.length },
-            { ad: 'ortaklanmamış çift', deger: M.ciftler.length, renk: '#8b7dff' },
-            { ad: 'elektron geometrisi', deger: M.elektronGeo, renk: '#94a3b8' },
-            { ad: 'molekül geometrisi', deger: M.molekulGeo, renk: '#ffb454' },
+            { ad: 'ortaklanmamış çift', deger: M.ciftler.length, renk: '#4338ca' },
+            { ad: 'elektron geometrisi', deger: M.elektronGeo, renk: '#6b7280' },
+            { ad: 'molekül geometrisi', deger: M.molekulGeo, renk: '#b45309' },
             { ad: 'bağ açısı', deger: M.aci },
-            { ad: 'hibritleşme', deger: M.hibrit, renk: '#7dd3fc' },
-            { ad: 'polarlık', deger: M.polar ? 'polar' : 'apolar', renk: M.polar ? '#f472b6' : '#4ade80' },
+            { ad: 'hibritleşme', deger: M.hibrit, renk: '#0369a1' },
+            { ad: 'polarlık', deger: M.polar ? 'polar' : 'apolar', renk: M.polar ? '#be185d' : '#15803d' },
           ]}
         />
       }
@@ -200,25 +200,25 @@ function MolekulSahne({ adim }: SahneProps) {
         </>
       }
       sahne={
-        <Sahne kamera={[3.6, 2.8, 5.2]} izgara={false} maxUzaklik={20} otoDondur>
+        <Sahne kamera={[3.6, 2.8, 5.2]} zemin="yok" maxUzaklik={20} otoDondur>
           {/* Merkez atom */}
           <mesh>
             <sphereGeometry args={[YARICAP[M.merkez] ?? 0.4, 32, 32]} />
             <meshStandardMaterial color={RENK[M.merkez]} roughness={0.35} metalness={0.1} />
           </mesh>
-          <Etiket konum={[0, (YARICAP[M.merkez] ?? 0.4) + 0.3, 0]} renk="#e6ecf7" kucuk>
+          <Etiket konum={[0, (YARICAP[M.merkez] ?? 0.4) + 0.3, 0]} renk="#191d24" kucuk>
             {M.merkez}
           </Etiket>
 
           {/* Bağlar ve uç atomlar */}
           {M.bag.map((b, i) => (
             <group key={i}>
-              <Bag a={[0, 0, 0]} b={uc(b.yon)} renk="#8fa3c4" />
+              <Bag a={[0, 0, 0]} b={uc(b.yon)} renk="#9aa0a8" />
               <mesh position={uc(b.yon)}>
                 <sphereGeometry args={[YARICAP[b.el] ?? 0.3, 28, 28]} />
                 <meshStandardMaterial color={RENK[b.el]} roughness={0.35} metalness={0.1} />
               </mesh>
-              <Etiket konum={[b.yon[0] * (L + 0.42), b.yon[1] * (L + 0.42), b.yon[2] * (L + 0.42)]} renk="#94a3b8" kucuk>
+              <Etiket konum={[b.yon[0] * (L + 0.42), b.yon[1] * (L + 0.42), b.yon[2] * (L + 0.42)]} renk="#6b7280" kucuk>
                 {b.el}
               </Etiket>
             </group>
@@ -232,14 +232,14 @@ function MolekulSahne({ adim }: SahneProps) {
                 <mesh position={[c[0] * 1.1, c[1] * 1.1, c[2] * 1.1]}>
                   <sphereGeometry args={[0.52, 24, 24]} />
                   <meshStandardMaterial
-                    color="#8b7dff"
+                    color="#4338ca"
                     transparent
                     opacity={0.3}
-                    emissive="#8b7dff"
-                    emissiveIntensity={0.35}
+                    emissive="#4338ca"
+                    emissiveIntensity={0.1}
                   />
                 </mesh>
-                <Etiket konum={[c[0] * 1.85, c[1] * 1.85, c[2] * 1.85]} renk="#8b7dff" kucuk>
+                <Etiket konum={[c[0] * 1.85, c[1] * 1.85, c[2] * 1.85]} renk="#4338ca" kucuk>
                   ortaklanmamış çift
                 </Etiket>
               </group>
@@ -256,7 +256,7 @@ function MolekulSahne({ adim }: SahneProps) {
                   const ara = new THREE.Quaternion().slerpQuaternions(new THREE.Quaternion(), q, i / 39)
                   return a.clone().applyQuaternion(ara).multiplyScalar(0.85).toArray() as V3
                 })}
-                color="#ffb454"
+                color="#b45309"
                 lineWidth={2}
               />
               <Etiket
@@ -265,7 +265,7 @@ function MolekulSahne({ adim }: SahneProps) {
                   ((M.bag[0].yon[1] + M.bag[1].yon[1]) / 2) * 1.15,
                   ((M.bag[0].yon[2] + M.bag[1].yon[2]) / 2) * 1.15,
                 ]}
-                renk="#ffb454"
+                renk="#b45309"
                 kucuk
               >
                 {M.aci}
@@ -279,12 +279,12 @@ function MolekulSahne({ adim }: SahneProps) {
               <Ok
                 baslangic={[0, 0, 0]}
                 bitis={[M.dipol[0] * 2.3, M.dipol[1] * 2.3, M.dipol[2] * 2.3]}
-                renk="#f472b6"
+                renk="#be185d"
                 kalinlik={0.045}
               />
               <Etiket
                 konum={[M.dipol[0] * 2.8, M.dipol[1] * 2.8, M.dipol[2] * 2.8]}
-                renk="#f472b6"
+                renk="#be185d"
                 kucuk
               >
                 bileşke dipol μ ≠ 0 → polar
@@ -292,7 +292,7 @@ function MolekulSahne({ adim }: SahneProps) {
             </>
           )}
           {adim >= 3 && !M.polar && (
-            <Etiket konum={[0, -2.6, 0]} renk="#4ade80" kucuk>
+            <Etiket konum={[0, -2.6, 0]} renk="#15803d" kucuk>
               simetri nedeniyle bağ dipolleri birbirini götürür → apolar
             </Etiket>
           )}

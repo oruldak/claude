@@ -1,20 +1,40 @@
 @import 'tailwindcss';
 @import 'katex/dist/katex.min.css';
 
+/*
+ * Küre tasarım dili
+ * ------------------------------------------------------------------
+ * Amaç: ekran "yazılım arayüzü" gibi değil, iyi basılmış bir ders
+ * kitabı + gerçek bir laboratuvar masası gibi görünsün. Bu yüzden
+ * sıcak kâğıt tonları, koyu mürekkep metin, ölçülü gölgeler ve
+ * ders başına tek bir canlı vurgu rengi kullanılıyor.
+ */
+
 @theme {
-  --color-gece-900: #050912;
-  --color-gece-800: #0a1020;
-  --color-gece-700: #111a30;
-  --color-gece-600: #1a2542;
-  --color-gece-500: #263355;
-  --color-camgobegi: #38e1c6;
-  --color-mor: #8b7dff;
-  --color-amber: #ffb454;
-  --font-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  /* Kâğıt ve mürekkep */
+  --color-kagit: #f7f4ef;
+  --color-kagit-2: #efeae1;
+  --color-yuzey: #ffffff;
+  --color-cizgi: #e4ddd1;
+  --color-cizgi-2: #d3c9b8;
+  --color-murekkep: #191d24;
+  --color-murekkep-2: #4a5260;
+  --color-murekkep-3: #7d8696;
+
+  /* Ders vurguları — sıcak ve doygun */
+  --color-mat: #0f766e;
+  --color-fizik: #4338ca;
+  --color-kimya: #b45309;
+  --color-biyo: #15803d;
+  --color-fen: #0369a1;
+  --color-sozel: #9d174d;
+
+  --font-sans: 'Inter var', 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
 }
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 html,
@@ -25,48 +45,75 @@ body,
 
 body {
   margin: 0;
-  background: var(--color-gece-900);
-  color: #e6ecf7;
+  color: var(--color-murekkep);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* Kâğıt hissi: çok hafif bir doku ve üstten sıcak bir aydınlanma */
+  background:
+    radial-gradient(1200px 600px at 50% -10%, #fffdf9 0%, rgba(255, 253, 249, 0) 60%),
+    var(--color-kagit);
 }
 
-/* Uygulama geneli yardımcı sınıflar */
+/* ------------------------------------------------------------------ */
+
 @utility kart {
-  background: color-mix(in srgb, var(--color-gece-800) 88%, transparent);
-  border: 1px solid color-mix(in srgb, var(--color-gece-500) 55%, transparent);
-  border-radius: 1rem;
+  background: var(--color-yuzey);
+  border: 1px solid var(--color-cizgi);
+  border-radius: 16px;
+  box-shadow:
+    0 1px 2px rgba(25, 29, 36, 0.04),
+    0 8px 24px -16px rgba(25, 29, 36, 0.18);
 }
 
-@utility cam {
-  background: linear-gradient(
-    160deg,
-    color-mix(in srgb, var(--color-gece-700) 75%, transparent),
-    color-mix(in srgb, var(--color-gece-800) 92%, transparent)
-  );
-  border: 1px solid color-mix(in srgb, var(--color-gece-500) 45%, transparent);
-  backdrop-filter: blur(12px);
+@utility kart-tik {
+  transition:
+    transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.18s,
+    border-color 0.18s;
 }
+@utility kart-tik-hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 2px 4px rgba(25, 29, 36, 0.05),
+    0 18px 40px -24px rgba(25, 29, 36, 0.35);
+}
+
+@utility etiket-kucuk {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+/* Ders anlatım metni: kitap gibi okunsun */
+@utility okuma {
+  font-size: 15px;
+  line-height: 1.72;
+  color: var(--color-murekkep-2);
+}
+
+/* ------------------------------------------------------------------ */
 
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 11px;
+  height: 11px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #26324f;
+  background: #cfc6b6;
   border-radius: 99px;
-  border: 2px solid transparent;
+  border: 3px solid transparent;
   background-clip: content-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #38466b;
+  background: #b6ab97;
   background-clip: content-box;
 }
 
-/* 3B sahne içindeki DOM etiketleri seçilemesin */
+/* 3B sahne içindeki DOM etiketleri */
 .sahne-etiket {
   user-select: none;
   pointer-events: none;
@@ -74,18 +121,45 @@ body {
 }
 
 .katex {
-  font-size: 1.02em;
+  font-size: 1.05em;
 }
 
-@keyframes kure-parlak {
-  0%,
-  100% {
-    opacity: 0.35;
+input[type='range'] {
+  appearance: none;
+  height: 4px;
+  border-radius: 99px;
+  background: var(--color-cizgi-2);
+  outline: none;
+}
+input[type='range']::-webkit-slider-thumb {
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--kure-vurgu, #0f766e);
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.28);
+  cursor: pointer;
+}
+input[type='range']::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--kure-vurgu, #0f766e);
+  border: 2px solid #fff;
+  cursor: pointer;
+}
+
+@keyframes kure-belir {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
   }
-  50% {
-    opacity: 0.9;
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
-.parlak {
-  animation: kure-parlak 2.4s ease-in-out infinite;
+.belir {
+  animation: kure-belir 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }

@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Cizgi as Line, Egri, Eksenler, Etiket, Nokta, Ok, Sahne, type V3 } from '../shared/sahne'
+import { Cizgi as Line, Egri, Eksenler, Etiket, KareliKagit, Nokta, Ok, Sahne, type V3 } from '../shared/sahne'
 import { Anahtar, Dugme, Duzen, Gosterge, Kaydirac } from '../shared/ui'
 import type { DersModulu, SahneProps } from '../types'
 
@@ -61,11 +61,11 @@ function FonksiyonSahne({ adim }: SahneProps) {
       gosterge={
         <Gosterge
           satirlar={[
-            { ad: 'temel', deger: T.ad, renk: '#7dd3fc' },
-            { ad: 'a (dikey ölçek)', deger: aEt.toFixed(2), renk: '#38e1c6' },
-            { ad: 'b (yatay ölçek)', deger: bEt.toFixed(2), renk: '#ffb454' },
-            { ad: 'h (yatay öteleme)', deger: hEt.toFixed(2), renk: '#f472b6' },
-            { ad: 'k (dikey öteleme)', deger: kEt.toFixed(2), renk: '#8b7dff' },
+            { ad: 'temel', deger: T.ad, renk: '#0369a1' },
+            { ad: 'a (dikey ölçek)', deger: aEt.toFixed(2), renk: '#0f766e' },
+            { ad: 'b (yatay ölçek)', deger: bEt.toFixed(2), renk: '#b45309' },
+            { ad: 'h (yatay öteleme)', deger: hEt.toFixed(2), renk: '#be185d' },
+            { ad: 'k (dikey öteleme)', deger: kEt.toFixed(2), renk: '#4338ca' },
           ]}
         />
       }
@@ -78,10 +78,10 @@ function FonksiyonSahne({ adim }: SahneProps) {
               </Dugme>
             ))}
           </div>
-          {adim >= 1 && <Kaydirac etiket="k" deger={k} min={-3} max={3} onChange={setK} basamak={1} renk="#8b7dff" />}
-          {adim >= 2 && <Kaydirac etiket="h" deger={h} min={-3} max={3} onChange={setH} basamak={1} renk="#f472b6" />}
+          {adim >= 1 && <Kaydirac etiket="k" deger={k} min={-3} max={3} onChange={setK} basamak={1} renk="#4338ca" />}
+          {adim >= 2 && <Kaydirac etiket="h" deger={h} min={-3} max={3} onChange={setH} basamak={1} renk="#be185d" />}
           {adim >= 3 && <Kaydirac etiket="a" deger={a} min={-2.5} max={2.5} onChange={setAmp} basamak={1} />}
-          {adim >= 4 && <Kaydirac etiket="b" deger={bpar} min={-3} max={3} onChange={setB} basamak={1} renk="#ffb454" />}
+          {adim >= 4 && <Kaydirac etiket="b" deger={bpar} min={-3} max={3} onChange={setB} basamak={1} renk="#b45309" />}
           <Anahtar etiket="dönüşüm okları" deger={okGoster} onChange={setOkGoster} />
           <Dugme
             boyut="sm"
@@ -97,7 +97,8 @@ function FonksiyonSahne({ adim }: SahneProps) {
         </>
       }
       sahne={
-        <Sahne kamera={[0, 0.5, 12]} izgara={false} maxUzaklik={30}>
+        <Sahne kamera={[0, 0.5, 12]} zemin="yok" maxUzaklik={30}>
+          <KareliKagit genislik={10} yukseklik={10} />
           <Eksenler boy={5} eksiBoy={5} bolme={1} />
 
           {/* Temel fonksiyon */}
@@ -105,7 +106,7 @@ function FonksiyonSahne({ adim }: SahneProps) {
             f={(x) => (T.tanim && !T.tanim(x) ? NaN : T.f(x))}
             x0={-5}
             x1={5}
-            renk="#42536f"
+            renk="#b8b0a2"
             kalinlik={2.4}
             kesikli
             sinirY={5.5}
@@ -116,26 +117,26 @@ function FonksiyonSahne({ adim }: SahneProps) {
             f={(x) => (gTanim(x) ? g(x) : NaN)}
             x0={-5}
             x1={5}
-            renk="#38e1c6"
+            renk="#0f766e"
             kalinlik={3.4}
             sinirY={5.5}
             adet={420}
           />
 
           {oklar.map((o, i) => (
-            <Ok key={i} baslangic={o.a} bitis={o.b} renk="#f472b6" kalinlik={0.026} baslikBoyu={0.2} opaklik={0.85} />
+            <Ok key={i} baslangic={o.a} bitis={o.b} renk="#be185d" kalinlik={0.026} baslikBoyu={0.2} opaklik={0.85} />
           ))}
 
           {/* Parabolün tepe noktası ve kökleri */}
           {adim >= 5 && tepe && (
             <>
-              <Nokta konum={tepe} renk="#ffb454" r={0.13} />
-              <Etiket konum={[tepe[0], tepe[1] + 0.55, 0]} renk="#ffb454" kucuk>
+              <Nokta konum={tepe} renk="#b45309" r={0.13} />
+              <Etiket konum={[tepe[0], tepe[1] + 0.55, 0]} renk="#b45309" kucuk>
                 tepe (h, k) = ({hEt.toFixed(1)}, {kEt.toFixed(1)})
               </Etiket>
               <Line
                 points={[[hEt, -5, 0], [hEt, 5, 0]] as V3[]}
-                color="#ffb454"
+                color="#b45309"
                 lineWidth={1.2}
                 dashed
                 dashSize={0.16}
@@ -145,17 +146,17 @@ function FonksiyonSahne({ adim }: SahneProps) {
                 [1, -1].map((s) => {
                   const kok = hEt + (s * Math.sqrt(-kEt / aEt)) / Math.abs(bEt)
                   return Math.abs(kok) < 5 ? (
-                    <Nokta key={s} konum={[kok, 0, 0]} renk="#f472b6" r={0.11} />
+                    <Nokta key={s} konum={[kok, 0, 0]} renk="#be185d" r={0.11} />
                   ) : null
                 })
               )}
             </>
           )}
 
-          <Etiket konum={[-4.2, 4.6, 0]} renk="#42536f" kucuk>
+          <Etiket konum={[-4.2, 4.6, 0]} renk="#b8b0a2" kucuk>
             kesikli: temel fonksiyon
           </Etiket>
-          <Etiket konum={[-4.2, 4.1, 0]} renk="#38e1c6" kucuk>
+          <Etiket konum={[-4.2, 4.1, 0]} renk="#0f766e" kucuk>
             düz: dönüşmüş fonksiyon
           </Etiket>
         </Sahne>

@@ -8,35 +8,35 @@ export function AramaSayfasi() {
   const sonuc = ara(q)
 
   return (
-    <div className="space-y-5">
+    <div className="mx-auto max-w-3xl space-y-5">
       <header>
-        <h1 className="text-2xl font-bold text-white">Arama</h1>
+        <h1 className="text-[28px] font-bold tracking-tight">Arama</h1>
         <input
           autoFocus
           value={q}
           onChange={(e) => setParams(e.target.value ? { q: e.target.value } : {})}
-          placeholder="konu, kazanım, ders adı…"
-          className="mt-3 w-full max-w-xl rounded-xl border border-gece-500/60 bg-gece-800/80 px-4 py-2.5 text-sm text-slate-200 outline-none placeholder:text-slate-500 focus:border-camgobegi/60"
+          placeholder="konu, kazanım ya da ders adı"
+          className="mt-3 w-full rounded-2xl border border-cizgi bg-white px-4 py-3 text-[15px] outline-none transition placeholder:text-murekkep-3 focus:border-murekkep-3"
         />
-        <p className="mt-2 text-xs text-slate-500">
-          {q.length < 2 ? 'En az iki harf yaz.' : `${sonuc.length} sonuç bulundu.`}
+        <p className="mt-2 text-[12.5px] text-murekkep-3">
+          {q.length < 2 ? 'En az iki harf yaz.' : `${sonuc.length} sonuç`}
         </p>
       </header>
 
-      <div className="space-y-2">
+      <div className="space-y-2.5">
         {sonuc.map((k, i) => {
           const m = modulBul(k.konu.sahne)
           return (
-            <div key={i} className="kart p-4">
+            <div key={i} className="kart px-5 py-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  <p className="text-[11px]" style={{ color: k.ders.renk }}>
+                <div className="min-w-0">
+                  <p className="text-[11.5px] font-semibold" style={{ color: k.ders.renk }}>
                     {k.ders.ad} · {k.sinif}. Sınıf · {k.unite.ad}
                   </p>
-                  <h2 className="mt-0.5 text-sm font-semibold text-white">{k.konu.ad}</h2>
-                  <ul className="mt-1.5 space-y-0.5">
+                  <h2 className="mt-0.5 text-[15.5px] font-semibold">{k.konu.ad}</h2>
+                  <ul className="mt-1.5 space-y-1">
                     {k.konu.kazanimlar.map((kz, j) => (
-                      <li key={j} className="text-[12px] leading-relaxed text-slate-400">
+                      <li key={j} className="text-[12.5px] leading-relaxed text-murekkep-2">
                         • {kz}
                       </li>
                     ))}
@@ -45,17 +45,17 @@ export function AramaSayfasi() {
                 <div className="flex shrink-0 flex-col gap-1.5">
                   <Link
                     to={`/ders/${k.ders.kod}/${k.sinif}`}
-                    className="rounded-lg border border-gece-500/50 px-3 py-1.5 text-[11px] text-slate-300 hover:border-camgobegi/50"
+                    className="rounded-lg border border-cizgi px-3 py-1.5 text-center text-[11.5px] font-semibold text-murekkep-2 hover:border-murekkep-3"
                   >
                     müfredatta gör
                   </Link>
                   {m && (
                     <Link
                       to={`/modul/${m.id}`}
-                      className="rounded-lg px-3 py-1.5 text-center text-[11px] font-semibold text-gece-900"
+                      className="rounded-lg px-3 py-1.5 text-center text-[11.5px] font-semibold text-white"
                       style={{ background: k.ders.renk }}
                     >
-                      3B modül
+                      3B dersi aç
                     </Link>
                   )}
                 </div>

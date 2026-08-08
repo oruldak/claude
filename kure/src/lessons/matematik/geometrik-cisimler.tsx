@@ -16,7 +16,7 @@ const ADLAR: Record<CisimTuru, string> = {
   kure: 'Küre',
 }
 
-const YUZEY = '#38e1c6'
+const YUZEY = '#0f766e'
 
 function Yuz({
   w,
@@ -50,12 +50,12 @@ function Prizma({ a, b, c, u }: { a: number; b: number; c: number; u: number }) 
   const t = (u * Math.PI) / 2
   return (
     <group>
-      <Yuz w={a} h={b} renk="#7dd3fc" opaklik={0.5} />
+      <Yuz w={a} h={b} renk="#0369a1" opaklik={0.5} />
       {/* +x kenarı: yan yüz ve ona bağlı üst yüz */}
       <group position={[a / 2, 0, 0]} rotation={[0, 0, t]}>
         <Yuz w={c} h={b} konum={[c / 2, 0, 0]} />
         <group position={[c, 0, 0]} rotation={[0, 0, t]}>
-          <Yuz w={a} h={b} konum={[a / 2, 0, 0]} renk="#7dd3fc" opaklik={0.5} />
+          <Yuz w={a} h={b} konum={[a / 2, 0, 0]} renk="#0369a1" opaklik={0.5} />
         </group>
       </group>
       <group position={[-a / 2, 0, 0]} rotation={[0, 0, -t]}>
@@ -96,7 +96,7 @@ function Piramit({ a, h, u }: { a: number; h: number; u: number }) {
 
   return (
     <group>
-      <Yuz w={a} h={a} renk="#7dd3fc" opaklik={0.5} />
+      <Yuz w={a} h={a} renk="#0369a1" opaklik={0.5} />
       {kenarlar.map((k, i) => (
         <group key={i} position={k.poz} rotation={k.rot as unknown as [number, number, number]}>
           <group rotation={[-Math.PI / 2 + t, 0, 0]}>
@@ -234,9 +234,9 @@ function GeometrikSahne({ adim }: SahneProps) {
       gosterge={
         <Gosterge
           satirlar={[
-            { ad: 'cisim', deger: ADLAR[tur], renk: '#7dd3fc' },
-            { ad: olcum.vt, deger: olcum.V.toFixed(2), renk: '#38e1c6' },
-            { ad: olcum.st, deger: olcum.S.toFixed(2), renk: '#ffb454' },
+            { ad: 'cisim', deger: ADLAR[tur], renk: '#0369a1' },
+            { ad: olcum.vt, deger: olcum.V.toFixed(2), renk: '#0f766e' },
+            { ad: olcum.st, deger: olcum.S.toFixed(2), renk: '#b45309' },
             { ad: 'köşe / ayrıt / yüz', deger: `${olcum.k} / ${olcum.ay} / ${olcum.y}` },
           ]}
         />
@@ -266,7 +266,7 @@ function GeometrikSahne({ adim }: SahneProps) {
             <Kaydirac etiket="h" deger={h} min={1} max={3.6} onChange={setH} basamak={1} />
           )}
           {adim >= 3 && (
-            <Kaydirac etiket="kesit yüksekliği" deger={kesitY} min={0} max={4} onChange={setKesitY} basamak={1} renk="#f472b6" />
+            <Kaydirac etiket="kesit yüksekliği" deger={kesitY} min={0} max={4} onChange={setKesitY} basamak={1} renk="#be185d" />
           )}
           <Anahtar etiket="açınımı elle çevir" deger={elle} onChange={setElle} />
           {elle && (tur === 'kup' || tur === 'prizma' || tur === 'piramit') && (
@@ -275,7 +275,7 @@ function GeometrikSahne({ adim }: SahneProps) {
         </>
       }
       sahne={
-        <Sahne kamera={[6, 5.5, 7.5]} izgara maxUzaklik={32} otoDondur={adim === 0}>
+        <Sahne kamera={[6, 5.5, 7.5]} zemin="ahsap" maxUzaklik={32} otoDondur={adim === 0}>
           {(tur === 'kup' || tur === 'prizma') && <Prizma a={kupA} b={kupB} c={kupC} u={u} />}
           {tur === 'piramit' && <Piramit a={a} h={h} u={u} />}
 
@@ -290,9 +290,9 @@ function GeometrikSahne({ adim }: SahneProps) {
                 <group position={[r + 1.2, 0.02, 0]}>
                   <mesh rotation={[-Math.PI / 2, 0, 0]} position={[(2 * Math.PI * r * (1 - u)) / 2, 0, 0]}>
                     <planeGeometry args={[2 * Math.PI * r * (1 - u), h]} />
-                    <meshStandardMaterial color="#ffb454" transparent opacity={0.5} side={THREE.DoubleSide} />
+                    <meshStandardMaterial color="#b45309" transparent opacity={0.5} side={THREE.DoubleSide} />
                   </mesh>
-                  <Etiket konum={[Math.PI * r * (1 - u), 0.3, 0]} renk="#ffb454" kucuk>
+                  <Etiket konum={[Math.PI * r * (1 - u), 0.3, 0]} renk="#b45309" kucuk>
                     2πr × h
                   </Etiket>
                 </group>
@@ -310,12 +310,12 @@ function GeometrikSahne({ adim }: SahneProps) {
                 <group position={[r + 1.6, 0.02, 0]} rotation={[-Math.PI / 2, 0, 0]}>
                   <mesh>
                     <circleGeometry args={[Math.hypot(r, h), 48, 0, koniAcisi * (1 - u)]} />
-                    <meshStandardMaterial color="#ffb454" transparent opacity={0.5} side={THREE.DoubleSide} />
+                    <meshStandardMaterial color="#b45309" transparent opacity={0.5} side={THREE.DoubleSide} />
                   </mesh>
                 </group>
               )}
               {u < 0.98 && (
-                <Etiket konum={[r + 2.4, 0.3, 0]} renk="#ffb454" kucuk>
+                <Etiket konum={[r + 2.4, 0.3, 0]} renk="#b45309" kucuk>
                   yan yüzey = daire dilimi (l = √(r²+h²))
                 </Etiket>
               )}
@@ -334,17 +334,17 @@ function GeometrikSahne({ adim }: SahneProps) {
             <>
               <mesh position={[0, kesitY, 0]} rotation={[-Math.PI / 2, 0, 0]}>
                 <planeGeometry args={[8, 8]} />
-                <meshStandardMaterial color="#f472b6" transparent opacity={0.1} side={THREE.DoubleSide} />
+                <meshStandardMaterial color="#be185d" transparent opacity={0.1} side={THREE.DoubleSide} />
               </mesh>
-              {kesit.length > 1 && <Line points={kesit} color="#f472b6" lineWidth={3} />}
-              <Etiket konum={[0, kesitY + 0.45, 0]} renk="#f472b6" kucuk>
+              {kesit.length > 1 && <Line points={kesit} color="#be185d" lineWidth={3} />}
+              <Etiket konum={[0, kesitY + 0.45, 0]} renk="#be185d" kucuk>
                 kesit
               </Etiket>
             </>
           )}
 
           {adim === 0 && (
-            <Etiket konum={[0, -0.7, 0]} renk="#94a3b8" kucuk>
+            <Etiket konum={[0, -0.7, 0]} renk="#6b7280" kucuk>
               cismi döndürerek yüzlerini, ayrıtlarını ve köşelerini incele
             </Etiket>
           )}

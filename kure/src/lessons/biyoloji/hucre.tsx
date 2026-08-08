@@ -17,17 +17,17 @@ interface Organel {
 }
 
 const ORGANELLER: Organel[] = [
-  { ad: 'Çekirdek', gorev: 'DNA’yı barındırır, hücreyi yönetir', renk: '#8b7dff', konum: [0, 0.2, 0], tip: 'kure', olcu: [0.95, 0, 0] },
+  { ad: 'Çekirdek', gorev: 'DNA’yı barındırır, hücreyi yönetir', renk: '#4338ca', konum: [0, 0.2, 0], tip: 'kure', olcu: [0.95, 0, 0] },
   { ad: 'Çekirdekçik', gorev: 'Ribozom üretimini başlatır', renk: '#c084fc', konum: [0.25, 0.35, 0.2], tip: 'kure', olcu: [0.32, 0, 0] },
-  { ad: 'Mitokondri', gorev: 'Solunumla ATP (enerji) üretir', renk: '#f472b6', konum: [1.9, 0.9, 0.6], tip: 'kapsul', olcu: [0.28, 0.95, 0] },
-  { ad: 'Mitokondri', gorev: 'Solunumla ATP (enerji) üretir', renk: '#f472b6', konum: [-1.7, -0.9, 0.9], tip: 'kapsul', olcu: [0.26, 0.85, 0] },
-  { ad: 'Granüllü ER', gorev: 'Protein sentezi ve taşınması', renk: '#38e1c6', konum: [-1.5, 1.1, -0.3], tip: 'disk', olcu: [1.15, 0.09, 0] },
-  { ad: 'Golgi aygıtı', gorev: 'Salgı maddelerini paketler', renk: '#ffb454', konum: [1.6, -1.2, -0.5], tip: 'disk', olcu: [0.95, 0.08, 0] },
-  { ad: 'Lizozom', gorev: 'Sindirim enzimleriyle parçalar', renk: '#fb7185', konum: [-0.6, -1.8, 0.8], tip: 'kure', olcu: [0.3, 0, 0] },
-  { ad: 'Sentrozom', gorev: 'Hücre bölünmesinde iğ ipliği kurar', renk: '#94a3b8', konum: [0.9, 1.7, -0.9], tip: 'kapsul', olcu: [0.13, 0.5, 0], hayvan: true },
-  { ad: 'Kloroplast', gorev: 'Fotosentezle besin üretir', renk: '#4ade80', konum: [-2.1, 0.2, -1], tip: 'kapsul', olcu: [0.38, 1, 0], bitki: true },
-  { ad: 'Kloroplast', gorev: 'Fotosentezle besin üretir', renk: '#4ade80', konum: [2, 1.6, -1.1], tip: 'kapsul', olcu: [0.36, 0.95, 0], bitki: true },
-  { ad: 'Koful', gorev: 'Su ve madde depolar, turgoru sağlar', renk: '#7dd3fc', konum: [0, -1.4, -0.6], tip: 'kure', olcu: [1.25, 0, 0], bitki: true },
+  { ad: 'Mitokondri', gorev: 'Solunumla ATP (enerji) üretir', renk: '#be185d', konum: [1.9, 0.9, 0.6], tip: 'kapsul', olcu: [0.28, 0.95, 0] },
+  { ad: 'Mitokondri', gorev: 'Solunumla ATP (enerji) üretir', renk: '#be185d', konum: [-1.7, -0.9, 0.9], tip: 'kapsul', olcu: [0.26, 0.85, 0] },
+  { ad: 'Granüllü ER', gorev: 'Protein sentezi ve taşınması', renk: '#0f766e', konum: [-1.5, 1.1, -0.3], tip: 'disk', olcu: [1.15, 0.09, 0] },
+  { ad: 'Golgi aygıtı', gorev: 'Salgı maddelerini paketler', renk: '#b45309', konum: [1.6, -1.2, -0.5], tip: 'disk', olcu: [0.95, 0.08, 0] },
+  { ad: 'Lizozom', gorev: 'Sindirim enzimleriyle parçalar', renk: '#e11d48', konum: [-0.6, -1.8, 0.8], tip: 'kure', olcu: [0.3, 0, 0] },
+  { ad: 'Sentrozom', gorev: 'Hücre bölünmesinde iğ ipliği kurar', renk: '#6b7280', konum: [0.9, 1.7, -0.9], tip: 'kapsul', olcu: [0.13, 0.5, 0], hayvan: true },
+  { ad: 'Kloroplast', gorev: 'Fotosentezle besin üretir', renk: '#15803d', konum: [-2.1, 0.2, -1], tip: 'kapsul', olcu: [0.38, 1, 0], bitki: true },
+  { ad: 'Kloroplast', gorev: 'Fotosentezle besin üretir', renk: '#15803d', konum: [2, 1.6, -1.1], tip: 'kapsul', olcu: [0.36, 0.95, 0], bitki: true },
+  { ad: 'Koful', gorev: 'Su ve madde depolar, turgoru sağlar', renk: '#0369a1', konum: [0, -1.4, -0.6], tip: 'kure', olcu: [1.25, 0, 0], bitki: true },
 ]
 
 function OrganelMesh({ o }: { o: Organel }) {
@@ -37,7 +37,7 @@ function OrganelMesh({ o }: { o: Organel }) {
       {o.tip === 'kapsul' && <capsuleGeometry args={[o.olcu[0], o.olcu[1], 8, 20]} />}
       {o.tip === 'disk' && <cylinderGeometry args={[o.olcu[0], o.olcu[0] * 0.8, o.olcu[1], 26]} />}
       {o.tip === 'kutu' && <boxGeometry args={[o.olcu[0], o.olcu[1], o.olcu[2]]} />}
-      <meshStandardMaterial color={o.renk} roughness={0.4} metalness={0.05} emissive={o.renk} emissiveIntensity={0.12} />
+      <meshStandardMaterial color={o.renk} roughness={0.4} metalness={0.05} />
     </mesh>
   )
 }
@@ -64,7 +64,7 @@ function HucreSahne({ adim }: SahneProps) {
       p.push({
         yon: [Math.sin(phi) * Math.cos(th), Math.sin(phi) * Math.sin(th), Math.cos(phi)],
         faz: (i * 0.37) % 1,
-        renk: i % 3 === 0 ? '#7dd3fc' : i % 3 === 1 ? '#4ade80' : '#ffb454',
+        renk: i % 3 === 0 ? '#0369a1' : i % 3 === 1 ? '#15803d' : '#b45309',
         ice: i % 4 !== 0,
       })
     }
@@ -78,7 +78,7 @@ function HucreSahne({ adim }: SahneProps) {
       gosterge={
         <Gosterge
           satirlar={[
-            { ad: 'hücre tipi', deger: bitki ? 'Bitki hücresi' : 'Hayvan hücresi', renk: bitki ? '#4ade80' : '#f472b6' },
+            { ad: 'hücre tipi', deger: bitki ? 'Bitki hücresi' : 'Hayvan hücresi', renk: bitki ? '#15803d' : '#be185d' },
             { ad: 'organel sayısı', deger: gorunur.length },
             ...(adim >= 3
               ? [
@@ -90,7 +90,7 @@ function HucreSahne({ adim }: SahneProps) {
                         : tasima === 'osmoz'
                           ? 'Osmoz (su, enerjisiz)'
                           : 'Aktif taşıma (ATP harcar)',
-                    renk: tasima === 'aktif' ? '#ffb454' : '#38e1c6',
+                    renk: tasima === 'aktif' ? '#b45309' : '#0f766e',
                   },
                 ]
               : []),
@@ -100,17 +100,17 @@ function HucreSahne({ adim }: SahneProps) {
       kontrol={
         <>
           <div className="flex gap-1.5">
-            <Dugme onClick={() => setBitki(false)} aktif={!bitki} boyut="sm" renk="#f472b6">
+            <Dugme onClick={() => setBitki(false)} aktif={!bitki} boyut="sm" renk="#be185d">
               hayvan hücresi
             </Dugme>
-            <Dugme onClick={() => setBitki(true)} aktif={bitki} boyut="sm" renk="#4ade80">
+            <Dugme onClick={() => setBitki(true)} aktif={bitki} boyut="sm" renk="#15803d">
               bitki hücresi
             </Dugme>
           </div>
           {adim >= 3 && (
             <div className="flex gap-1.5">
               {(['difuzyon', 'osmoz', 'aktif'] as const).map((m) => (
-                <Dugme key={m} onClick={() => setTasima(m)} aktif={tasima === m} boyut="sm" renk="#ffb454">
+                <Dugme key={m} onClick={() => setTasima(m)} aktif={tasima === m} boyut="sm" renk="#b45309">
                   {m === 'difuzyon' ? 'difüzyon' : m === 'osmoz' ? 'osmoz' : 'aktif taşıma'}
                 </Dugme>
               ))}
@@ -120,12 +120,12 @@ function HucreSahne({ adim }: SahneProps) {
         </>
       }
       sahne={
-        <Sahne kamera={[5.5, 3.5, 7]} izgara={false} maxUzaklik={26} otoDondur={adim === 0}>
+        <Sahne kamera={[5.5, 3.5, 7]} zemin="yok" maxUzaklik={26} otoDondur={adim === 0}>
           {/* Hücre çeperi (bitki) */}
           {bitki && (
             <mesh>
               <boxGeometry args={[R * 2.05, R * 2.05, R * 2.05]} />
-              <meshStandardMaterial color="#4ade80" transparent opacity={0.08} side={THREE.BackSide} />
+              <meshStandardMaterial color="#15803d" transparent opacity={0.08} side={THREE.BackSide} />
             </mesh>
           )}
 
@@ -133,7 +133,7 @@ function HucreSahne({ adim }: SahneProps) {
           <mesh>
             <sphereGeometry args={[R, 48, 32]} />
             <meshPhysicalMaterial
-              color="#7dd3fc"
+              color="#0369a1"
               transparent
               opacity={0.14}
               roughness={0.2}
@@ -142,7 +142,7 @@ function HucreSahne({ adim }: SahneProps) {
             />
           </mesh>
           {etiketler && (
-            <Etiket konum={[0, R + 0.45, 0]} renk="#7dd3fc" kucuk>
+            <Etiket konum={[0, R + 0.45, 0]} renk="#0369a1" kucuk>
               hücre zarı — seçici geçirgen
             </Etiket>
           )}
@@ -172,7 +172,7 @@ function HucreSahne({ adim }: SahneProps) {
                   position={[r * Math.sin(phi) * Math.cos(th), r * Math.sin(phi) * Math.sin(th), r * Math.cos(phi)]}
                 >
                   <sphereGeometry args={[0.07, 10, 10]} />
-                  <meshStandardMaterial color="#e6ecf7" emissive="#e6ecf7" emissiveIntensity={0.3} />
+                  <meshStandardMaterial color="#191d24" />
                 </mesh>
               )
             })}
@@ -183,17 +183,17 @@ function HucreSahne({ adim }: SahneProps) {
               const u = (t * hiz + p.faz) % 1
               const yon = tasima === 'aktif' && !p.ice ? -1 : 1
               const rr = p.ice ? R + 1.6 - u * 2.6 * yon : R - 1.4 + u * 2.4
-              const renk = tasima === 'osmoz' ? '#7dd3fc' : p.renk
+              const renk = tasima === 'osmoz' ? '#0369a1' : p.renk
               return (
                 <mesh key={i} position={[p.yon[0] * rr, p.yon[1] * rr, p.yon[2] * rr]}>
                   <sphereGeometry args={[0.09, 10, 10]} />
-                  <meshStandardMaterial color={renk} emissive={renk} emissiveIntensity={0.6} />
+                  <meshStandardMaterial color={renk} />
                 </mesh>
               )
             })}
 
           {adim >= 4 && (
-            <Etiket konum={[0, -R - 0.8, 0]} renk={bitki ? '#4ade80' : '#f472b6'} kucuk>
+            <Etiket konum={[0, -R - 0.8, 0]} renk={bitki ? '#15803d' : '#be185d'} kucuk>
               {bitki
                 ? 'bitki hücresinde: hücre çeperi + kloroplast + büyük koful'
                 : 'hayvan hücresinde: sentrozom var, çeper ve kloroplast yok'}

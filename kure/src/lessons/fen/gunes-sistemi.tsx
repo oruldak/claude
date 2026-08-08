@@ -1,57 +1,70 @@
 import { useMemo, useState } from 'react'
 import { Cizgi as Line, Etiket, Sahne, type V3 } from '../shared/sahne'
+import { Ay, Dunya, Gezegen, Gunes } from '../shared/gokcisimleri'
 import { Anahtar, Dugme, Duzen, Gosterge, Kaydirac } from '../shared/ui'
 import { useZaman } from '../shared/animasyon'
 import type { DersModulu, SahneProps } from '../types'
 
-interface Gezegen {
+interface GezegenTanim {
   ad: string
-  r: number // görsel yarıçap
-  a: number // yörünge yarıçapı (sahne birimi)
-  periyot: number // yıl
+  r: number
+  a: number
+  periyot: number
   renk: string
-  halka?: boolean
+  halka?: { ic: number; dis: number; renk: string }
+  gercek?: 'dunya'
 }
 
-/** Ölçek gerçek değildir; uzaklıklar sıkıştırılmış, çaplar büyütülmüştür. */
-const GEZEGENLER: Gezegen[] = [
-  { ad: 'Merkür', r: 0.11, a: 1.6, periyot: 0.24, renk: '#a8a29e' },
-  { ad: 'Venüs', r: 0.18, a: 2.3, periyot: 0.62, renk: '#e8c07d' },
-  { ad: 'Dünya', r: 0.19, a: 3.1, periyot: 1, renk: '#4aa8ff' },
-  { ad: 'Mars', r: 0.14, a: 3.9, periyot: 1.88, renk: '#e2725b' },
-  { ad: 'Jüpiter', r: 0.46, a: 5.4, periyot: 11.86, renk: '#d9a066' },
-  { ad: 'Satürn', r: 0.4, a: 6.8, periyot: 29.5, renk: '#e6d3a3', halka: true },
-  { ad: 'Uranüs', r: 0.28, a: 8.0, periyot: 84, renk: '#8fd6e6' },
-  { ad: 'Neptün', r: 0.27, a: 9.1, periyot: 165, renk: '#4f6fd8' },
+/** Ölçek gerçek değildir: uzaklıklar sıkıştırılmış, çaplar büyütülmüştür. */
+const GEZEGENLER: GezegenTanim[] = [
+  { ad: 'Merkür', r: 0.13, a: 2.2, periyot: 0.24, renk: '#9b9188' },
+  { ad: 'Venüs', r: 0.2, a: 3.0, periyot: 0.62, renk: '#d8b075' },
+  { ad: 'Dünya', r: 0.22, a: 3.9, periyot: 1, renk: '#2f7fd4', gercek: 'dunya' },
+  { ad: 'Mars', r: 0.16, a: 4.8, periyot: 1.88, renk: '#c1563c' },
+  { ad: 'Jüpiter', r: 0.5, a: 6.5, periyot: 11.86, renk: '#c8a071' },
+  {
+    ad: 'Satürn',
+    r: 0.44,
+    a: 8.0,
+    periyot: 29.5,
+    renk: '#d8c69a',
+    halka: { ic: 1.35, dis: 2.15, renk: '#c3b48d' },
+  },
+  { ad: 'Uranüs', r: 0.31, a: 9.3, periyot: 84, renk: '#8ec9d6' },
+  { ad: 'Neptün', r: 0.3, a: 10.4, periyot: 165, renk: '#4a63b8' },
 ]
 
-function cember(r: number, y = 0): V3[] {
-  return Array.from({ length: 129 }, (_, i) => {
-    const u = (i / 128) * Math.PI * 2
-    return [r * Math.cos(u), y, r * Math.sin(u)] as V3
+function cember(r: number): V3[] {
+  return Array.from({ length: 161 }, (_, i) => {
+    const u = (i / 160) * Math.PI * 2
+    return [r * Math.cos(u), 0, r * Math.sin(u)] as V3
   })
 }
 
 function GunesSahne({ adim }: SahneProps) {
-  const [hiz, setHiz] = useState(0.35)
+  const [hiz, setHiz] = useState(0.3)
   const [oynat, setOynat] = useState(true)
   const [yorungeler, setYorungeler] = useState(true)
   const [tutulma, setTutulma] = useState<'yok' | 'gunes' | 'ay'>('yok')
   const [t] = useZaman(oynat, hiz)
 
-  const yakin = adim === 2 || adim === 3 // Dünya–Ay yakın görünümü
+  const yakin = adim === 2 || adim === 3
 
-  const gezegenKonum = (g: Gezegen): V3 => {
+  const konum = (g: GezegenTanim): V3 => {
     const a = (t * 2 * Math.PI) / g.periyot
     return [g.a * Math.cos(a), 0, g.a * Math.sin(a)]
   }
 
-  // Yakın görünümde Güneş sola sabitlenir, Ay Dünya çevresinde dolanır
-  const gunesYonu: V3 = [-9, 0, 0]
-  const ayAcisi = tutulma === 'gunes' ? Math.PI : tutulma === 'ay' ? 0 : t * 1.6
-  const ayKonum: V3 = [2.6 * Math.cos(ayAcisi), 0.32 * Math.sin(ayAcisi), 2.6 * Math.sin(ayAcisi)]
+  // Yakın görünüm: Güneş solda uzakta, Ay Dünya çevresinde
+  const gunesYonu: V3 = [-13, 0, 0]
+  const ayAcisi = tutulma === 'gunes' ? Math.PI : tutulma === 'ay' ? 0 : t * 1.5
+  const ayKonum: V3 = [
+    3.1 * Math.cos(ayAcisi),
+    tutulma === 'yok' ? 0.35 * Math.sin(ayAcisi * 0.8) : 0,
+    3.1 * Math.sin(ayAcisi),
+  ]
 
-  const evreAdi = useMemo(() => {
+  const evre = useMemo(() => {
     const a = ((ayAcisi % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2)
     if (a < 0.4 || a > 5.88) return 'dolunay'
     if (a < 1.2) return 'şişkin ay'
@@ -67,32 +80,46 @@ function GunesSahne({ adim }: SahneProps) {
     <Duzen
       gosterge={
         <Gosterge
+          baslik={yakin ? 'Güneş – Dünya – Ay' : 'güneş sistemi'}
           satirlar={
             yakin
               ? [
-                  { ad: 'görünüm', deger: 'Güneş – Dünya – Ay', renk: '#ffb454' },
-                  { ad: 'Ay evresi', deger: evreAdi, renk: '#e2e8f0' },
-                  { ad: 'Ay’ın dolanma süresi', deger: '≈ 27,3 gün' },
-                  { ad: 'tutulma', deger: tutulma === 'yok' ? '—' : tutulma === 'gunes' ? 'Güneş tutulması' : 'Ay tutulması', renk: '#f472b6' },
+                  { ad: 'Ay evresi', deger: evre, renk: '#b45309' },
+                  { ad: 'dolanma süresi', deger: '≈ 27,3 gün' },
+                  { ad: 'Ay uzaklığı', deger: '384 400 km' },
+                  {
+                    ad: 'tutulma',
+                    deger:
+                      tutulma === 'yok'
+                        ? '—'
+                        : tutulma === 'gunes'
+                          ? 'Güneş tutulması'
+                          : 'Ay tutulması',
+                    renk: '#be185d',
+                  },
                 ]
               : [
-                  { ad: 'geçen süre', deger: `${(t).toFixed(1)} yıl`, renk: '#ffb454' },
+                  { ad: 'geçen süre', deger: `${t.toFixed(1)} yıl`, renk: '#b45309' },
                   { ad: 'gezegen sayısı', deger: 8 },
-                  { ad: 'en hızlı', deger: 'Merkür (88 gün)', renk: '#a8a29e' },
-                  { ad: 'en yavaş', deger: 'Neptün (165 yıl)', renk: '#4f6fd8' },
+                  { ad: 'en hızlı', deger: 'Merkür · 88 gün' },
+                  { ad: 'en yavaş', deger: 'Neptün · 165 yıl' },
                 ]
           }
         />
       }
       kontrol={
         <>
-          <Kaydirac etiket="zaman hızı" deger={hiz} min={0} max={2} onChange={setHiz} basamak={2} />
+          <Kaydirac etiket="zaman hızı" deger={hiz} min={0} max={1.5} onChange={setHiz} basamak={2} />
           <Anahtar etiket="yörünge çizgileri" deger={yorungeler} onChange={setYorungeler} />
           {yakin && (
-            <div className="flex gap-1.5">
+            <div className="flex flex-wrap gap-1.5">
               {(['yok', 'gunes', 'ay'] as const).map((k) => (
-                <Dugme key={k} onClick={() => setTutulma(k)} aktif={tutulma === k} boyut="sm" renk="#f472b6">
-                  {k === 'yok' ? 'serbest dolanım' : k === 'gunes' ? 'Güneş tutulması' : 'Ay tutulması'}
+                <Dugme key={k} onClick={() => setTutulma(k)} aktif={tutulma === k} boyut="sm" renk="#be185d">
+                  {k === 'yok'
+                    ? 'serbest dolanım'
+                    : k === 'gunes'
+                      ? 'Güneş tutulması kur'
+                      : 'Ay tutulması kur'}
                 </Dugme>
               ))}
             </div>
@@ -104,110 +131,87 @@ function GunesSahne({ adim }: SahneProps) {
       }
       sahne={
         <Sahne
-          kamera={yakin ? [0, 4.5, 9] : [0, 8, 13]}
-          izgara={false}
+          kamera={yakin ? [-1.4, 2.6, 7.6] : [0, 12, 17]}
+          fov={yakin ? 42 : 46}
+          zemin="yok"
           uzay
-          maxUzaklik={50}
+          maxUzaklik={60}
           minUzaklik={2}
         >
           {yakin ? (
             <>
-              {/* Güneş yönü (uzakta) */}
-              <pointLight position={gunesYonu} intensity={260} distance={0} decay={2} color="#fff6e0" />
-              <mesh position={gunesYonu}>
-                <sphereGeometry args={[1.4, 32, 32]} />
-                <meshBasicMaterial color="#ffd479" />
-              </mesh>
-              <Etiket konum={[gunesYonu[0], 2.1, 0]} renk="#ffd479" kucuk>
-                Güneş
+              <Gunes konum={gunesYonu} r={2.2} isik={900} hale={11} />
+              <Etiket konum={[-5.4, 2.4, 0]} koyu kucuk>
+                ← Güneş (ölçek dışı uzaklıkta)
               </Etiket>
 
-              {/* Dünya */}
-              <mesh>
-                <sphereGeometry args={[1, 48, 32]} />
-                <meshStandardMaterial color="#3b82f6" roughness={0.85} />
-              </mesh>
-              <Etiket konum={[0, 1.4, 0]} renk="#7dd3fc" kucuk>
+              <Dunya konum={[0, 0, 0]} r={1.25} egim={0.41} />
+              <Etiket konum={[0, 1.8, 0]} koyu kucuk>
                 Dünya
               </Etiket>
 
-              {/* Ay */}
-              <mesh position={ayKonum}>
-                <sphereGeometry args={[0.3, 32, 24]} />
-                <meshStandardMaterial color="#d6d3d1" roughness={0.95} />
-              </mesh>
-              <Etiket konum={[ayKonum[0], ayKonum[1] + 0.55, ayKonum[2]]} renk="#e2e8f0" kucuk>
-                Ay — {evreAdi}
+              <Ay konum={ayKonum} r={0.34} />
+              <Etiket konum={[ayKonum[0], ayKonum[1] + 0.72, ayKonum[2]]} koyu kucuk>
+                Ay — {evre}
               </Etiket>
-              {yorungeler && <Line points={cember(2.6)} color="#26324f" lineWidth={1.4} />}
+              {yorungeler && <Line points={cember(3.1)} color="#2c3450" lineWidth={1} />}
 
-              {/* Gölge konileri */}
-              {tutulma === 'gunes' && (
+              {tutulma !== 'yok' && (
                 <>
-                  <Line points={[[gunesYonu[0], 0, 0], [3.5, 0, 0]] as V3[]} color="#f472b6" lineWidth={1.6} dashed dashSize={0.2} gapSize={0.15} />
-                  <Etiket konum={[1.6, -1.3, 0]} renk="#f472b6" kucuk>
-                    Ay, Güneş ile Dünya arasında → Güneş tutulması
-                  </Etiket>
-                </>
-              )}
-              {tutulma === 'ay' && (
-                <>
-                  <Line points={[[gunesYonu[0], 0, 0], [4.2, 0, 0]] as V3[]} color="#f472b6" lineWidth={1.6} dashed dashSize={0.2} gapSize={0.15} />
-                  <Etiket konum={[1.6, -1.3, 0]} renk="#f472b6" kucuk>
-                    Dünya, Güneş ile Ay arasında → Ay tutulması
+                  <Line
+                    points={[
+                      [gunesYonu[0] + 2.2, 0, 0],
+                      [5, 0, 0],
+                    ]}
+                    color="#ff8fb0"
+                    lineWidth={1.4}
+                    dashed
+                    dashSize={0.24}
+                    gapSize={0.18}
+                  />
+                  <Etiket konum={[1.6, -1.9, 0]} koyu>
+                    {tutulma === 'gunes'
+                      ? 'Ay tam arada → gölgesi Dünya’ya düşer → Güneş tutulması'
+                      : 'Dünya tam arada → gölgesi Ay’a düşer → Ay tutulması'}
                   </Etiket>
                 </>
               )}
             </>
           ) : (
             <>
-              {/* Güneş */}
-              <pointLight position={[0, 0, 0]} intensity={220} distance={0} decay={2} color="#fff3d6" />
-              <mesh>
-                <sphereGeometry args={[0.85, 40, 32]} />
-                <meshBasicMaterial color="#ffcf5c" />
-              </mesh>
-              <Etiket konum={[0, 1.3, 0]} renk="#ffcf5c" kucuk>
+              <Gunes konum={[0, 0, 0]} r={1.1} isik={620} hale={6} />
+              <Etiket konum={[0, 1.7, 0]} koyu kucuk>
                 Güneş
               </Etiket>
 
               {GEZEGENLER.map((g) => {
-                const p = gezegenKonum(g)
+                const p = konum(g)
                 return (
                   <group key={g.ad}>
-                    {yorungeler && <Line points={cember(g.a)} color="#1c2a48" lineWidth={1.2} />}
-                    <mesh position={p}>
-                      <sphereGeometry args={[g.r, 28, 22]} />
-                      <meshStandardMaterial color={g.renk} roughness={0.85} />
-                    </mesh>
-                    {g.halka && (
-                      <mesh position={p} rotation={[Math.PI / 2 - 0.35, 0, 0]}>
-                        <torusGeometry args={[g.r * 1.9, 0.03, 8, 48]} />
-                        <meshStandardMaterial color="#cbb994" roughness={0.8} />
-                      </mesh>
+                    {yorungeler && <Line points={cember(g.a)} color="#243050" lineWidth={1} />}
+                    {g.gercek === 'dunya' ? (
+                      <Dunya konum={p} r={g.r} egim={0.41} bulut={false} atmosfer={false} />
+                    ) : (
+                      <Gezegen konum={p} r={g.r} renk={g.renk} halka={g.halka} />
                     )}
-                    <Etiket konum={[p[0], p[1] + g.r + 0.32, p[2]]} renk={g.renk} kucuk>
+                    <Etiket konum={[p[0], p[1] + g.r + 0.42, p[2]]} koyu kucuk>
                       {g.ad}
                     </Etiket>
-                    {/* Dünya'nın Ay'ı */}
                     {g.ad === 'Dünya' && (
-                      <mesh position={[p[0] + 0.42 * Math.cos(t * 12), 0, p[2] + 0.42 * Math.sin(t * 12)]}>
-                        <sphereGeometry args={[0.06, 14, 12]} />
-                        <meshStandardMaterial color="#d6d3d1" roughness={0.95} />
-                      </mesh>
+                      <Ay konum={[p[0] + 0.5 * Math.cos(t * 12), 0, p[2] + 0.5 * Math.sin(t * 12)]} r={0.07} />
                     )}
                   </group>
                 )
               })}
 
               {adim >= 4 && (
-                <Etiket konum={[0, -1.6, 0]} renk="#38e1c6" kucuk>
+                <Etiket konum={[0, -2.2, 0]} koyu>
                   Kepler 3: T² ∝ a³ — Güneş’ten uzaklaşan gezegen yavaşlar
                 </Etiket>
               )}
               {adim === 0 && (
-                <Etiket konum={[0, 3.4, 0]} renk="#94a3b8" kucuk>
-                  ölçek gerçek değildir: uzaklıklar sıkıştırılmış, gezegenler büyütülmüştür
+                <Etiket konum={[0, 4.4, 0]} koyu kucuk>
+                  ölçek gerçek değil: uzaklıklar sıkıştırıldı, gezegenler büyütüldü
                 </Etiket>
               )}
             </>
@@ -221,7 +225,8 @@ function GunesSahne({ adim }: SahneProps) {
 export const gunesSistemiModulu: DersModulu = {
   id: 'gunes-sistemi',
   baslik: 'Güneş Sistemi, Ay’ın Evreleri ve Tutulmalar',
-  altBaslik: 'Yörüngeleri gez, Ay’ın evrelerini geometriyle çöz, tutulmaları kur.',
+  altBaslik:
+    'Gerçek Dünya ve Ay görüntüleriyle: yörüngeler, evrelerin geometrisi ve tutulmaların kurulumu.',
   ders: 'fen',
   seviye: '5. / 6. / 7. Sınıf',
   sure: 16,
@@ -229,60 +234,60 @@ export const gunesSistemiModulu: DersModulu = {
   Sahne: GunesSahne,
   adimlar: [
     {
-      baslik: 'Güneş sistemi',
+      baslik: 'Güneş sistemi neye benziyor?',
       metin:
-        'Merkezde Güneş, çevresinde sekiz gezegen dolanır. İçteki dört gezegen (Merkür, Venüs, Dünya, Mars) kayaç; dıştaki dördü (Jüpiter, Satürn, Uranüs, Neptün) gaz ve buz devleridir. Dikkat: sahnedeki ölçek gerçek değildir — gerçek uzaklıklar bu ekrana sığmaz.',
+        'Merkezde Güneş, çevresinde sekiz gezegen dolanır. İçteki dördü (Merkür, Venüs, Dünya, Mars) kayaç; dıştaki dördü gaz ve buz devidir. Dünya gerçek uydu görüntüsüyle kaplandı, diğerleri gerçek renklerine yakın malzemelerle çizildi. Uyarı: ölçek gerçek değil — gerçek uzaklıklar bu ekrana sığmaz.',
     },
     {
-      baslik: 'Yörüngeler: dolanma ve dönme',
+      baslik: 'Neden bazı gezegenler daha hızlı dolanıyor?',
       metin:
-        'Her gezegen kendi ekseni etrafında DÖNER (gece-gündüz) ve Güneş çevresinde DOLANIR (yıl). Güneş\'e yakın gezegenler daha hızlı dolanır: Merkür\'ün yılı 88 gün, Neptün\'ünki 165 Dünya yılıdır. Zaman hızını artırıp bu farkı izle.',
+        'Her gezegen kendi ekseninde döner (gün) ve Güneş çevresinde dolanır (yıl). Güneş\'e yakın olanlar hem daha kısa yol alır hem daha güçlü çekim altında daha hızlı gider: Merkür\'ün yılı 88 gün, Neptün\'ünki 165 Dünya yılıdır. Zaman hızını artırıp farkı izle.',
     },
     {
-      baslik: 'Ay’ın evreleri',
+      baslik: 'Ay neden şekil değiştiriyor?',
       metin:
-        'Şimdi yakın görünümdeyiz. Ay ışık ÜRETMEZ; Güneş\'ten aldığı ışığı yansıtır. Yarısı her zaman aydınlıktır ama biz Dünya\'dan bu aydınlık yarının ne kadarını gördüğümüze göre farklı evreler görürüz. Ay Dünya ile Güneş arasındayken karanlık yüzünü görürüz: yeni ay. Tam karşısındayken: dolunay.',
+        'Yakın görünümdeyiz. Ay ışık üretmez; Güneş\'ten aldığı ışığı yansıtır ve yarısı her zaman aydınlıktır — sahnedeki aydınlanmayı da boya değil, gerçek ışık hesabı yapıyor. Biz Dünya\'dan bu aydınlık yarının ne kadarını gördüğümüze göre farklı evreler görürüz. Ay, Güneş ile Dünya arasındayken karanlık yüzüne bakarız: yeni ay. Tam karşısındayken: dolunay.',
     },
     {
-      baslik: 'Tutulmalar',
+      baslik: 'Tutulmalar nasıl oluşur?',
       metin:
-        'GÜNEŞ TUTULMASI: Ay tam olarak Güneş ile Dünya arasına girer ve gölgesi Dünya\'ya düşer (yeni ay evresinde olur). AY TUTULMASI: Dünya, Güneş ile Ay arasına girer ve gölgesi Ay\'ın üzerine düşer (dolunay evresinde olur). Her ay tutulma olmamasının nedeni, Ay\'ın yörüngesinin yaklaşık 5° eğik olmasıdır.',
+        'GÜNEŞ TUTULMASI: Ay tam olarak Güneş ile Dünya arasına girer, gölgesi Dünya\'ya düşer — yalnızca yeni ay evresinde olabilir. AY TUTULMASI: Dünya araya girer, gölgesi Ay\'ın üzerine düşer — yalnızca dolunayda. Düğmelerle iki dizilimi de kur. Peki her ay neden tutulma olmuyor? Çünkü Ay\'ın yörüngesi yaklaşık 5° eğik; üçü çoğu ayda tam aynı hizaya gelmez.',
     },
     {
-      baslik: 'Kepler yasaları',
+      baslik: 'Yörüngeleri hangi kural yönetiyor?',
       metin:
-        'Yörüngeler tam çember değil, Güneş bir odakta olan ELİPSTİR (1. yasa). Gezegen Güneş\'e yakınken hızlanır, uzakken yavaşlar; eşit zamanda eşit alan tarar (2. yasa). Dolanma süresinin karesi, yörünge yarıçapının küpüyle orantılıdır: T² ∝ a³ (3. yasa).',
+        'Yörüngeler tam çember değil, Güneş\'in bir odakta olduğu elipstir (Kepler 1). Gezegen Güneş\'e yakınken hızlanır, uzakken yavaşlar; eşit sürede eşit alan tarar (Kepler 2). Dolanma süresinin karesi yörünge yarıçapının küpüyle orantılıdır: T² ∝ a³ (Kepler 3). Bu üçüncü kuralın Newton\'ın çekim yasasından nasıl çıktığını İspat sekmesinde adım adım göreceksin.',
     },
   ],
   ispat: {
-    baslik: 'Kepler’in 3. yasasının Newton ile türetilişi',
-    giris: 'Dairesel yörünge yaklaşımı için kütle çekimi merkezcil kuvveti sağlar.',
+    baslik: 'Kepler’in 3. yasası Newton’dan nasıl çıkar?',
+    giris: 'Dairesel yörünge yaklaşımıyla: gezegeni yörüngede tutan tek kuvvet kütle çekimidir.',
     satirlar: [
-      { tex: 'G\\frac{Mm}{a^{2}}=\\frac{mv^{2}}{a}', not: 'Çekim = merkezcil kuvvet' },
+      { tex: 'G\\frac{Mm}{a^{2}}=\\frac{mv^{2}}{a}', not: 'Çekim kuvveti = merkezcil kuvvet' },
       { tex: 'v=\\frac{2\\pi a}{T}', not: 'Bir turluk yol / süre' },
-      { tex: 'G\\frac{M}{a^{2}}=\\frac{4\\pi^{2}a}{T^{2}}' },
-      { tex: 'T^{2}=\\frac{4\\pi^{2}}{GM}\\,a^{3}' },
+      { tex: 'G\\frac{M}{a^{2}}=\\frac{4\\pi^{2}a}{T^{2}}', not: 'v yerine yazıldı, gezegen kütlesi m sadeleşti' },
+      { tex: 'T^{2}=\\frac{4\\pi^{2}}{GM}\\,a^{3}', not: 'Sabit yalnızca merkezdeki kütleye bağlı' },
     ],
-    sonuc: 'T^{2}\\propto a^{3}\\quad (\\text{Kepler’in 3. yasası})',
+    sonuc: 'T² ∝ a³ — aynı yıldızın çevresindeki bütün gezegenler için geçerlidir.',
   },
   sorular: [
     {
       soru: 'Ay’ın evrelerinin oluşma nedeni nedir?',
       secenekler: [
         'Dünya’nın gölgesinin Ay üzerine düşmesi',
-        'Ay’ın Dünya çevresinde dolanırken aydınlık yüzünün farklı görünmesi',
+        'Ay dolanırken aydınlık yüzünün bize farklı görünmesi',
         'Ay’ın kendi ışığını değiştirmesi',
         'Bulutların Ay’ı kapatması',
       ],
       dogru: 1,
       aciklama:
-        'Gölge açıklaması yanlıştır — o Ay tutulmasıdır. Evreler, aydınlık yarının bize göre görünen kısmının değişmesinden doğar.',
+        'Gölge açıklaması Ay tutulmasına aittir. Evreler, hep aydınlık olan yarının bize görünen kısmının değişmesinden doğar.',
     },
     {
       soru: 'Güneş tutulması hangi evrede gerçekleşir?',
       secenekler: ['Dolunay', 'Yeni ay', 'İlk dördün', 'Son dördün'],
       dogru: 1,
-      aciklama: 'Güneş tutulması için Ay’ın Güneş ile Dünya arasında olması gerekir; bu da yeni ay evresidir.',
+      aciklama: 'Ay’ın Güneş ile Dünya arasında olması gerekir; bu dizilim yeni ay evresidir.',
     },
     {
       soru: 'Güneş’ten uzaklaştıkça gezegenlerin dolanma süresi nasıl değişir?',
@@ -291,16 +296,16 @@ export const gunesSistemiModulu: DersModulu = {
       aciklama: 'T² ∝ a³ olduğundan yörünge yarıçapı arttıkça dolanma süresi hızla uzar.',
     },
     {
-      soru: 'Neden her ay Güneş ve Ay tutulması olmaz?',
+      soru: 'Neden her ay hem Güneş hem Ay tutulması olmaz?',
       secenekler: [
-        'Ay bazen çok küçüktür',
-        'Ay’ın yörünge düzlemi yaklaşık 5° eğiktir',
-        'Bulutlar engel olur',
-        'Dünya çok hızlı döner',
+        'Ay bazen çok küçük göründüğü için',
+        'Ay’ın yörünge düzlemi yaklaşık 5° eğik olduğu için',
+        'Bulutlar engellediği için',
+        'Dünya çok hızlı döndüğü için',
       ],
       dogru: 1,
       aciklama:
-        'Ay’ın yörüngesi Dünya’nın yörünge düzlemiyle çakışmadığından üç gök cismi çoğu ayda tam hizaya gelmez.',
+        'Ay’ın yörüngesi Dünya’nın yörünge düzlemiyle çakışmaz; üç gök cismi çoğu ayda tam hizaya gelmez.',
     },
   ],
 }

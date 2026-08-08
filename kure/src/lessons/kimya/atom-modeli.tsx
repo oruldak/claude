@@ -101,13 +101,13 @@ function AtomSahne({ adim }: SahneProps) {
       gosterge={
         <Gosterge
           satirlar={[
-            { ad: 'element', deger: `${el.sembol} — ${el.ad}`, renk: '#ffb454' },
-            { ad: 'proton (Z)', deger: el.Z, renk: '#ff7a45' },
-            { ad: 'nötron', deger: el.notron, renk: '#94a3b8' },
-            { ad: 'elektron', deger: el.Z, renk: '#7dd3fc' },
+            { ad: 'element', deger: `${el.sembol} — ${el.ad}`, renk: '#b45309' },
+            { ad: 'proton (Z)', deger: el.Z, renk: '#e0602e' },
+            { ad: 'nötron', deger: el.notron, renk: '#6b7280' },
+            { ad: 'elektron', deger: el.Z, renk: '#0369a1' },
             { ad: 'kütle numarası', deger: el.Z + el.notron },
-            { ad: 'kabuk dizilimi', deger: kab.join(' · '), renk: '#38e1c6' },
-            { ad: 'değerlik elektronu', deger: degerlik, renk: '#f472b6' },
+            { ad: 'kabuk dizilimi', deger: kab.join(' · '), renk: '#0f766e' },
+            { ad: 'değerlik elektronu', deger: degerlik, renk: '#be185d' },
           ]}
         />
       }
@@ -121,13 +121,13 @@ function AtomSahne({ adim }: SahneProps) {
             ))}
           </div>
           <Kaydirac etiket="dönme hızı" deger={hiz} min={0} max={2.5} onChange={setHiz} basamak={1} />
-          {adim >= 3 && <Anahtar etiket="elektronu uyar (ışıma)" deger={uyarilmis} onChange={setUyarilmis} renk="#ffb454" />}
+          {adim >= 3 && <Anahtar etiket="elektronu uyar (ışıma)" deger={uyarilmis} onChange={setUyarilmis} renk="#b45309" />}
           {adim >= 4 && (
             <div className="flex gap-1.5">
               <Dugme onClick={() => setOrbital('s')} aktif={orbital === 's'} boyut="sm">
                 s orbitali
               </Dugme>
-              <Dugme onClick={() => setOrbital('p')} aktif={orbital === 'p'} boyut="sm" renk="#8b7dff">
+              <Dugme onClick={() => setOrbital('p')} aktif={orbital === 'p'} boyut="sm" renk="#4338ca">
                 p orbitali
               </Dugme>
             </div>
@@ -138,22 +138,22 @@ function AtomSahne({ adim }: SahneProps) {
         </>
       }
       sahne={
-        <Sahne kamera={[0, 2.5, 8]} izgara={false} maxUzaklik={26} otoDondur={adim === 0}>
+        <Sahne kamera={[0, 2.5, 8]} zemin="yok" maxUzaklik={26} otoDondur={adim === 0}>
           {/* Çekirdek */}
           {adim < 4 &&
             cekirdek.map((c, i) => (
               <mesh key={i} position={c.poz}>
                 <sphereGeometry args={[0.13, 16, 16]} />
                 <meshStandardMaterial
-                  color={c.proton ? '#ff7a45' : '#8fa3c4'}
-                  emissive={c.proton ? '#ff7a45' : '#000000'}
+                  color={c.proton ? '#e0602e' : '#9aa0a8'}
+                  emissive={c.proton ? '#e0602e' : '#000000'}
                   emissiveIntensity={c.proton ? 0.25 : 0}
                   roughness={0.4}
                 />
               </mesh>
             ))}
           {adim < 4 && (
-            <Etiket konum={[0, -0.95, 0]} renk="#ff7a45" kucuk>
+            <Etiket konum={[0, -0.95, 0]} renk="#e0602e" kucuk>
               çekirdek: {el.Z} proton + {el.notron} nötron
             </Etiket>
           )}
@@ -169,7 +169,7 @@ function AtomSahne({ adim }: SahneProps) {
               }
               return (
                 <group key={ki}>
-                  <Line points={yorunge} color="#26324f" lineWidth={1.4} />
+                  <Line points={yorunge} color="#d8cfc0" lineWidth={1.4} />
                   {Array.from({ length: sayi }, (_, j) => {
                     const u = (j / sayi) * Math.PI * 2 + t * (1.4 / (ki + 1))
                     const poz: V3 = [R * Math.cos(u), R * Math.sin(u) * 0.32, R * Math.sin(u)]
@@ -177,15 +177,15 @@ function AtomSahne({ adim }: SahneProps) {
                       <mesh key={j} position={poz}>
                         <sphereGeometry args={[0.1, 14, 14]} />
                         <meshStandardMaterial
-                          color={ki === kab.length - 1 ? '#f472b6' : '#7dd3fc'}
-                          emissive={ki === kab.length - 1 ? '#f472b6' : '#7dd3fc'}
-                          emissiveIntensity={0.7}
+                          color={ki === kab.length - 1 ? '#be185d' : '#0369a1'}
+                          emissive={ki === kab.length - 1 ? '#be185d' : '#0369a1'}
+                          emissiveIntensity={0.2}
                         />
                       </mesh>
                     )
                   })}
                   {adim >= 2 && (
-                    <Etiket konum={[R + 0.35, 0.32, 0]} renk={ki === kab.length - 1 ? '#f472b6' : '#7dd3fc'} kucuk>
+                    <Etiket konum={[R + 0.35, 0.32, 0]} renk={ki === kab.length - 1 ? '#be185d' : '#0369a1'} kucuk>
                       {ki + 1}. kabuk: {sayi}e⁻
                     </Etiket>
                   )}
@@ -198,9 +198,9 @@ function AtomSahne({ adim }: SahneProps) {
             <>
               <mesh>
                 <sphereGeometry args={[0.5, 20, 20]} />
-                <meshStandardMaterial color="#ffb454" transparent opacity={0.25} emissive="#ffb454" emissiveIntensity={0.6} />
+                <meshStandardMaterial color="#b45309" transparent opacity={0.25} />
               </mesh>
-              <Etiket konum={[0, 3.4, 0]} renk="#ffb454" kucuk>
+              <Etiket konum={[0, 3.4, 0]} renk="#b45309" kucuk>
                 elektron üst kabuğa çıktı → geri dönerken foton yayar (E = h·f)
               </Etiket>
             </>
@@ -212,7 +212,7 @@ function AtomSahne({ adim }: SahneProps) {
               <Points positions={bulut} stride={3}>
                 <PointMaterial
                   transparent
-                  color={orbital === 's' ? '#7dd3fc' : '#8b7dff'}
+                  color={orbital === 's' ? '#0369a1' : '#4338ca'}
                   size={0.055}
                   sizeAttenuation
                   depthWrite={false}
@@ -222,9 +222,9 @@ function AtomSahne({ adim }: SahneProps) {
               </Points>
               <mesh>
                 <sphereGeometry args={[0.16, 16, 16]} />
-                <meshStandardMaterial color="#ff7a45" emissive="#ff7a45" emissiveIntensity={0.7} />
+                <meshStandardMaterial color="#e0602e" emissive="#e0602e" emissiveIntensity={0.2} />
               </mesh>
-              <Etiket konum={[0, -3.2, 0]} renk={orbital === 's' ? '#7dd3fc' : '#8b7dff'} kucuk>
+              <Etiket konum={[0, -3.2, 0]} renk={orbital === 's' ? '#0369a1' : '#4338ca'} kucuk>
                 {orbital === 's'
                   ? 's orbitali: küresel simetrik, elektron bulunma olasılığı merkeze yakın en yüksek'
                   : 'p orbitali: iki loblu, düğüm düzleminde bulunma olasılığı sıfır'}
