@@ -1,5 +1,62 @@
 # Küre — 3B Öğrenme Platformu
 
+## Nasıl açılır?
+
+### 1) Bilgisayarında çalıştırmak (geliştirme)
+
+Önce [Node.js 20+](https://nodejs.org) kurulu olmalı. Sonra:
+
+```bash
+git clone https://github.com/oruldak/claude.git
+cd claude/kure
+npm install
+npm run dev
+```
+
+Terminalde çıkan adresi tarayıcıda aç: **http://localhost:5173**
+
+### 2) Derlenmiş hâlini açmak
+
+```bash
+npm run build      # dist/ klasörünü üretir
+npm run preview    # http://localhost:4321
+```
+
+`dist/` klasörü tamamen statiktir; herhangi bir web sunucusuna kopyalanabilir.
+Ancak `index.html` dosyasına çift tıklayarak (`file://`) açmak yeterli değildir —
+tarayıcı güvenlik kuralları 3B dokuların yüklenmesini engeller. Bir sunucu
+gerekir; en kolayı:
+
+```bash
+npx serve dist
+```
+
+### 3) İnternette yayınlamak (herkesin açabileceği bağlantı)
+
+Depoda hazır bir GitHub Actions akışı var: `.github/workflows/kure-pages.yml`.
+Tek seferlik ayar:
+
+1. GitHub'da depoyu aç → **Settings › Pages**
+2. **Build and deployment › Source** kısmını **GitHub Actions** yap
+3. **Actions** sekmesinden "Küre — GitHub Pages'e yayınla" akışını çalıştır
+   (ya da `kure/` altında bir değişiklik push et; kendiliğinden çalışır)
+
+Sonuç: `https://oruldak.github.io/claude/` adresinde yayına girer. Uygulama
+`HashRouter` ve göreli varlık yolları kullandığı için alt dizinde sorunsuz
+çalışır.
+
+Alternatif olarak Netlify veya Vercel'e de bağlanabilirsin:
+
+| Ayar | Değer |
+| --- | --- |
+| Base / root directory | `kure` |
+| Build command | `npm run build` |
+| Publish directory | `dist` |
+
+Sunucu tarafı yoktur; tümüyle statik olarak yayınlanır.
+
+---
+
 İlkokul, ortaokul ve lise müfredatını **gerçek görsellerle, üç boyutlu ve
 animasyonlu** ders sahneleriyle anlatan okul uygulaması. Her ders bir soruyla
 başlar — *neden böyle?*, *nasıl oluyor?* — öğrenci sahnede kendi eliyle dener,
@@ -52,18 +109,17 @@ düzenek, metal küre, enerji çubukları), eğik düzlem, elektrik alan (3B ala
 **Fen Bilimleri** — Güneş sistemi / Ay evreleri / tutulmalar, mevsimlerin
 oluşumu (gerçek Dünya dokusu, öğle açısı ve gündüz süresi hesaplı).
 
-## Çalıştırma
+## Komutlar
 
 ```bash
-npm install
-npm run dev        # geliştirme
+npm run dev        # geliştirme sunucusu (http://localhost:5173)
 npm run build      # üretim derlemesi (dist/)
-npm run preview    # derlenmiş sürümü 4321 portunda sun
+npm run preview    # derlenmiş sürümü sun (http://localhost:4321)
 npm run smoke      # 30 sayfayı tarayıcıda gezip konsol hatası arar
 npm run kapaklar   # ders kartlarının kapak görsellerini yeniden üretir
 ```
 
-`smoke` ve `kapaklar`, `preview` sunucusunun ayakta olmasını bekler.
+`smoke` ve `kapaklar` komutları, `preview` sunucusunun ayakta olmasını bekler.
 
 ## Mimari
 
