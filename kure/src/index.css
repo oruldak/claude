@@ -1,0 +1,91 @@
+@import 'tailwindcss';
+@import 'katex/dist/katex.min.css';
+
+@theme {
+  --color-gece-900: #050912;
+  --color-gece-800: #0a1020;
+  --color-gece-700: #111a30;
+  --color-gece-600: #1a2542;
+  --color-gece-500: #263355;
+  --color-camgobegi: #38e1c6;
+  --color-mor: #8b7dff;
+  --color-amber: #ffb454;
+  --font-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-gece-900);
+  color: #e6ecf7;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Uygulama geneli yardımcı sınıflar */
+@utility kart {
+  background: color-mix(in srgb, var(--color-gece-800) 88%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-gece-500) 55%, transparent);
+  border-radius: 1rem;
+}
+
+@utility cam {
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--color-gece-700) 75%, transparent),
+    color-mix(in srgb, var(--color-gece-800) 92%, transparent)
+  );
+  border: 1px solid color-mix(in srgb, var(--color-gece-500) 45%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #26324f;
+  border-radius: 99px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #38466b;
+  background-clip: content-box;
+}
+
+/* 3B sahne içindeki DOM etiketleri seçilemesin */
+.sahne-etiket {
+  user-select: none;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.katex {
+  font-size: 1.02em;
+}
+
+@keyframes kure-parlak {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+.parlak {
+  animation: kure-parlak 2.4s ease-in-out infinite;
+}
