@@ -1,0 +1,19 @@
+{
+  "name": "tr-voice-ai",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Turkiye (+90 / 0850) numaralari icin Vapi ve Retell tabanli outbound + inbound sesli AI ajan iskeleti",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "server": "node src/server.js",
+    "vapi:setup": "node src/vapi/setup.js",
+    "vapi:call": "node src/vapi/call.js",
+    "retell:setup": "node src/retell/setup.js",
+    "retell:call": "node src/retell/call.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  }
+}
